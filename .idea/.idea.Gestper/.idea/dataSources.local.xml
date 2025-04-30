@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="RD-251.23774.471">
-    <data-source name="@localhost" uuid="dc3829cd-bbb0-4564-8c59-163f08cdd073">
-      <database-info product="Microsoft SQL Server" version="16.00.1000" jdbc-version="4.2" driver-name="JetBrains JDBC Driver for SQL Server" driver-version="1.0" dbms="MSSQL" exact-version="16.0.1000" exact-driver-version="1.0">
-        <extra-name-characters>$#@</extra-name-characters>
-        <identifier-quote-string>&quot;</identifier-quote-string>
-      </database-info>
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+  <component name="dataSourceStorageLocal" created-in="RD-251.23774.437">
+    <data-source name="MesaAyudaSistema.bacpac" uuid="2181498c-32e7-471b-86c1-2894595b1008">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" />
       <secret-storage>master_key</secret-storage>
-      <auth-provider>ms-sso</auth-provider>
-      <schema-mapping>
-        <introspection-scope>
-          <node negative="1">
-            <node kind="database" negative="1" />
-            <node kind="database" qname="MesaAyudaSistema">
-              <node kind="schema">
-                <name qname="@" />
-                <name qname="dbo" />
-              </node>
-            </node>
-          </node>
-        </introspection-scope>
-      </schema-mapping>
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping />
     </data-source>
   </component>
 </project>

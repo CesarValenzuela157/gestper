@@ -4,103 +4,315 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
-
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-
+    
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="~/css/site.css" />
-
+    
     @RenderSection("Styles", required: false)
+    
+    <style>
+        /* Colores personalizados para Gestper */
+        :root {
+            --bs-primary: #0056b3;
+            --bs-primary-rgb: 0, 86, 179;
+        }
+        
+        .bg-primary {
+            background-color: var(--bs-primary) !important;
+        }
+        
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        .btn-outline-primary {
+            color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        .hero-section {
+            padding: 5rem 0;
+            background-color: #f8f9fa;
+        }
+        
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            font-size: 2rem;
+        }
+        
+        .testimonial-avatar {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">Gestper</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Features">Características</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Pricing">Precios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contacto</a>
+                        </li>
+                        <li class="nav-item ms-lg-3">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                Iniciar sesión
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+
+        @if (TempData["LoginError"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["LoginError"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+
+        @if (TempData["RegisterError"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["RegisterError"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        
+        @RenderBody()
+    </main>
+
+    <footer class="footer py-4 bg-light mt-auto">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="/">Gestper</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#features">Características</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#pricing">Precios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">Nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contacto</a>
-                    </li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-primary" href="/login">Iniciar sesión</a>
-                    </li>
-                </ul>
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-primary">Gestper</h5>
+                    <p>Sistema integral de gestión de personal para empresas modernas.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h5>Empresa</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-area="" asp-controller="Home" asp-action="About" class="text-decoration-none">Nosotros</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Team" class="text-decoration-none">Equipo</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Careers" class="text-decoration-none">Carreras</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h5>Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-area="" asp-controller="Blog" asp-action="Index" class="text-decoration-none">Blog</a></li>
+                        <li><a asp-area="" asp-controller="Docs" asp-action="Index" class="text-decoration-none">Documentación</a></li>
+                        <li><a asp-area="" asp-controller="Support" asp-action="Index" class="text-decoration-none">Soporte</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contáctanos</h5>
+                    <p>¿Tienes preguntas? Estamos aquí para ayudarte.</p>
+                    <a href="mailto:info@gestper.com" class="text-decoration-none">info@gestper.com</a>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="mb-0">&copy; @DateTime.Now.Year Gestper. Todos los derechos reservados.</p>
+                <div>
+                    <a href="#" class="text-decoration-none me-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-decoration-none me-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-decoration-none me-2"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-decoration-none"><i class="bi bi-instagram"></i></a>
+                </div>
             </div>
         </div>
-    </nav>
-</header>
+    </footer>
 
-<main role="main">
-    @RenderBody()
-</main>
-
-<footer class="footer py-4 bg-light mt-auto">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4 mb-md-0">
-                <h5 class="text-primary">Gestper</h5>
-                <p>Sistema integral de gestión de personal para empresas modernas.</p>
-            </div>
-            <div class="col-md-2 mb-4 mb-md-0">
-                <h5>Empresa</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-decoration-none">Nosotros</a></li>
-                    <li><a href="#" class="text-decoration-none">Equipo</a></li>
-                    <li><a href="#" class="text-decoration-none">Carreras</a></li>
-                </ul>
-            </div>
-            <div class="col-md-2 mb-4 mb-md-0">
-                <h5>Recursos</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-decoration-none">Blog</a></li>
-                    <li><a href="#" class="text-decoration-none">Documentación</a></li>
-                    <li><a href="#" class="text-decoration-none">Soporte</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h5>Contáctanos</h5>
-                <p>¿Tienes preguntas? Estamos aquí para ayudarte.</p>
-                <a href="alejandro.espinoza@gestper.cl" class="text-decoration-none">alejandro.espinoza@gestper.cl</a>
-                <p> Para más información ponte en contacto con nosotros en los teléfonos: </p>
-                <a href="tel:+569 71398861" class="text-decoration-none">+569 71398861</a>
-                <a href="tel:+569 44212536" class="text-decoration-none">+569 44212536</a>
-            </div>
-        </div>
-        <hr>
-        <div class="d-flex justify-content-between align-items-center">
-            <p class="mb-0">&copy;  Copyright Adinex</p>
-            <div>
-                <a href="#" class="text-decoration-none me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-decoration-none me-2"><i class="bi bi-twitter"></i></a>
-                <a href="#" class="text-decoration-none me-2"><i class="bi bi-linkedin"></i></a>
-                <a href="#" class="text-decoration-none"><i class="bi bi-instagram"></i></a>
+    <!-- Modal de Inicio de Sesión -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="Account" asp-action="Login" method="post" id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese su nombre de usuario.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese su contraseña.
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Recordarme</label>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-primary">Ingresar</button>
+                            <a href="#" class="text-decoration-none">¿Olvidó su contraseña?</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="mb-0">¿No tiene una cuenta? <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Regístrese aquí</a></p>
+                </div>
             </div>
         </div>
     </div>
-</footer>
 
-<!-- Bootstrap JS Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Modal de Registro -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Crear Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre completo</label>
+                            <input type="text" class="form-control" id="registerName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="registerUsername" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsCheck" name="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">Acepto los <a href="#" class="text-decoration-none">términos y condiciones</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="mb-0">¿Ya tiene una cuenta? <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Inicie sesión aquí</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Scripts personalizados -->
-<script src="~/js/site.js"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts personalizados -->
+    <script src="~/js/site.js"></script>
+    
+    <script>
+        // Validación del formulario de inicio de sesión
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
 
-@RenderSection("Scripts", required: false)
+        // Validación del formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        
+            // Validar que las contraseñas coincidan
+            var password = document.getElementById('registerPassword').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+        
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPassword').setCustomValidity('Las contraseñas no coinciden');
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                document.getElementById('confirmPassword').setCustomValidity('');
+            }
+        
+            this.classList.add('was-validated');
+        });
+    
+        // Mostrar modal de login si hay error de autenticación
+        @if (TempData["LoginError"] != null)
+        {
+            <text>
+            document.addEventListener('DOMContentLoaded', function() {
+                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            });
+            </text>
+        }
+    </script>
+    
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
