@@ -17,19 +17,28 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <style>
+        body {
+            padding-top: 80px; /* Evita que el contenido quede oculto tras el navbar fijo */
+        }
+    </style>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <a class="navbar-brand ms-5" href="/">
+            <img src="~/images/Gestper-logo_Mesa-de-trabajo-1.png" alt="Gestper" height="60" />
+        </a>
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="/">Gestper</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Caracteristicas" asp-action="Caracteristicas">Carateristicas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#pricing">Precios</a>
+                        <a class="nav-link" asp-controller="Precios" asp-action="Precios">Precios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Nosotros" asp-action="Nosotros">Nosotros</a>
@@ -43,10 +52,9 @@
                     <li class="nav-item ms-lg-3">
                         <a class="btn btn-primary" asp-controller="Ticket" asp-action="Create">Crear Ticket</a>
                     </li>
-
-                        <li class="nav-item ms-lg-3">
-                            <a class="btn btn-primary" asp-controller="Usuario" asp-action="Login">Iniciar sesión</a>
-                        </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-primary" asp-controller="Usuario" asp-action="Login">Iniciar sesión</a>
+                    </li>
                 </ul>
             </div>
         </div>
