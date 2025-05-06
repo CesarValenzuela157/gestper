@@ -2,55 +2,71 @@
 
 @{
     ViewData["Title"] = "Crear Ticket";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // asegura que use tu layout principal
 }
 
-<h2>Crear Nuevo Ticket</h2>
+<div class="container mt-4">
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Crear Nuevo Ticket</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="Titulo" class="form-label fw-bold"></label>
+                    <input asp-for="Titulo" class="form-control" placeholder="Ingrese el título del ticket" />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Titulo"></label>
-        <input asp-for="Titulo" class="form-control" />
-        <span asp-validation-for="Titulo" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label fw-bold"></label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="4" placeholder="Describa el problema o solicitud"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdUsuario" class="form-label fw-bold"></label>
+                        <input asp-for="IdUsuario" class="form-control" placeholder="ID del Usuario" />
+                        <span asp-validation-for="IdUsuario" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label fw-bold"></label>
+                        <input asp-for="IdEstado" class="form-control" placeholder="ID del Estado" />
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="IdCategoria" class="form-label fw-bold"></label>
+                        <input asp-for="IdCategoria" class="form-control" placeholder="ID de la Categoría" />
+                        <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="IdPrioridad" class="form-label fw-bold"></label>
+                        <input asp-for="IdPrioridad" class="form-control" placeholder="ID de la Prioridad" />
+                        <span asp-validation-for="IdPrioridad" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="IdDepartamento" class="form-label fw-bold"></label>
+                        <input asp-for="IdDepartamento" class="form-control" placeholder="ID del Departamento" />
+                        <span asp-validation-for="IdDepartamento" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Crear Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Descripcion"></label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
-        <span asp-validation-for="Descripcion" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IdUsuario"></label>
-        <input asp-for="IdUsuario" class="form-control" />
-        <span asp-validation-for="IdUsuario" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IdEstado"></label>
-        <input asp-for="IdEstado" class="form-control" />
-        <span asp-validation-for="IdEstado" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IdCategoria"></label>
-        <input asp-for="IdCategoria" class="form-control" />
-        <span asp-validation-for="IdCategoria" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IdPrioridad"></label>
-        <input asp-for="IdPrioridad" class="form-control" />
-        <span asp-validation-for="IdPrioridad" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="IdDepartamento"></label>
-        <input asp-for="IdDepartamento" class="form-control" />
-        <span asp-validation-for="IdDepartamento" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Crear Ticket</button>
-</form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

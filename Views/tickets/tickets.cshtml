@@ -1,40 +1,52 @@
-@model List<Gestper.Models.Ticket>
+@model IEnumerable<Gestper.Models.Ticket>
 
 @{
-    ViewData["Title"] = "Listado de Tickets";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Listado de Tickets";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Asegúrate que tu layout esté en esta ruta
 }
 
-<h2 class="mb-4">Listado de Tickets</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="text-primary mb-4">Listado de Tickets</h1>
+            <p class="mb-4">Aquí puedes ver todos los tickets registrados en el sistema.</p>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-    <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Descripción</th>
-        <th>Fecha</th>
-        <th>Usuario</th>
-        <th>Estado</th>
-        <th>Categoría</th>
-        <th>Prioridad</th>
-        <th>Departamento</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var ticket in Model)
-    {
-        <tr>
-            <td>@ticket.IdTicket</td>
-            <td>@ticket.Titulo</td>
-            <td>@ticket.Descripcion</td>
-            <td>@ticket.FechaCreacion.ToString("yyyy-MM-dd")</td>
-            <td>@ticket.IdUsuario</td>
-            <td>@ticket.IdEstado</td>
-            <td>@ticket.IdCategoria</td>
-            <td>@ticket.IdPrioridad</td>
-            <td>@ticket.IdDepartamento</td>
-        </tr>
-    }
-    </tbody>
-</table>
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">No hay tickets registrados actualmente.</div>
+            }
+            else
+            {
+                <table class="table table-bordered table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Fecha de Creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model)
+                        {
+                            <tr>
+                                <td>@ticket.IdTicket</td>
+                                <td>@ticket.Titulo</td>
+                                <td>@ticket.Descripcion</td>
+                                <td>@ticket.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <a asp-controller="Ticket" asp-action="Details" asp-route-id="@ticket.IdTicket" class="btn btn-sm btn-info me-1">Ver</a>
+                                    <a asp-controller="Ticket" asp-action="Edit" asp-route-id="@ticket.IdTicket" class="btn btn-sm btn-warning me-1">Editar</a>
+                                    <a asp-controller="Ticket" asp-action="Delete" asp-route-id="@ticket.IdTicket" class="btn btn-sm btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <a asp-controller="Ticket" asp-action="Create" class="btn btn-success mt-3">Crear nuevo Ticket</a>
+        </div>
+    </div>
+</div>

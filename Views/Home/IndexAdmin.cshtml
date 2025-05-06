@@ -1,0 +1,299 @@
+@model List<Gestper.Models.TicketAdmin>
+@{
+    Layout = null;
+    
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestper</title>
+    <style>
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        .top-bar {
+            background-color: #3e5da7;
+            height: 50px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #e0e0e0;
+            padding: 15px;
+            font-weight: bold;
+            width: 100%;
+            box-sizing: border-box;
+            border-bottom: 4px solid #2f4eb7;
+            margin-top: -1px;
+        }
+
+        .ticket-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 50px);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #e0e0e0;
+            border-right: 4px solid #2f4eb7;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .sidebar-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sidebar-item span {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-item.selected {
+            background-color: #d4d4d4;
+            font-weight: bold;
+        }
+
+        .arrow-sidebar {
+            font-size: 18px;
+        }
+
+        .logout {
+            justify-content: flex-start;
+            gap: 10px;
+            font-weight: normal;
+            color: black;
+        }
+
+        .logout:hover {
+            background-color: #dcdcdc;
+        }
+
+        .logout-icon {
+            font-size: 16px;
+        }
+
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .filters input {
+            padding: 6px 15px;
+            border-radius: 100px;
+            border: 1px solid #999;
+            box-shadow: none;
+            width: 200px;
+        }
+
+        .filters select {
+            padding: 6px;
+            border-radius: 100px; /* Ovalado */
+            border: 1px solid #999;
+            width: 160px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .tickets {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .ticket-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .ticket-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-info {
+            flex: 1;
+        }
+
+        .ticket-arrow {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .ticket {
+            background-color: white;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .ticket:hover {
+            background-color: #f0f0f0;
+        }
+
+        .arrow {
+            float: right;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .ticket-metadata {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .ticket-metadata span {
+            flex: 1 1 25%;
+        }
+
+        .ticket-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 25px; 
+            margin-bottom: 4px;
+        }
+
+        .ticket-description {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <img src="/images/logo.png" style="height:150px;">
+        </div>
+        <div>USUARIO</div>
+    </div>
+
+    <div class="status-bar">
+        <div class="ticket-summary">
+            <div class="count"><strong>3</strong></div>
+            <div class="label">TODOS LOS TICKETS</div>
+        </div>
+        <div class="ticket-summary">
+            <div class="count"><strong>3</strong></div>
+            <div class="label">TICKETS NUEVOS</div>
+        </div>
+        <div class="ticket-summary">
+            <div class="count"><strong>1</strong></div>
+            <div class="label">EN PROGRESO</div>
+        </div>
+        <div class="ticket-summary">
+            <div class="count"><strong>1</strong></div>
+            <div class="label">CERRADOS</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-item selected">
+                <span>Todos los tickets</span>
+                <span class="arrow-sidebar">›</span>
+            </div>
+            <div class="sidebar-item logout">
+                <span class="logout-icon">⮐</span>
+                <span>Cerrar sesión</span>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="filters">
+                <input type="text" placeholder="Ingrese una ID a buscar" />
+                <select>
+                    <option>Seleccione estado</option>
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Cerrado</option>
+                </select>
+                <select>
+                    <option>Seleccione prioridad</option>
+                    <option>Baja</option>
+                    <option>Media</option>
+                    <option>Alta</option>
+                </select>
+                <select>
+                    <option>Departamento</option>
+                </select>
+            </div>
+
+            <div class="tickets">
+                @foreach (var ticket in Model)
+                {
+                    <a href="@Url.Action("Detalle", "Home", new { id = ticket.Id })" class="ticket-link">
+
+                        <div class="ticket">
+                            <div class="ticket-content">
+                                <div class="ticket-info">
+                                    <div class="ticket-metadata">
+                                        <span><strong>Ticket ID:</strong> @ticket.Id</span>
+                                        <span><strong>Creado por:</strong> @ticket.CreadoPor</span>
+                                        <span><strong>Hora de creación:</strong> @ticket.FechaCreacion.ToString("HH:mm")</span>
+                                        <span><strong>Fecha de creación:</strong> @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
+                                    </div>
+                                    <div class="ticket-title">@ticket.NombreConsulta</div>
+                                    <div class="ticket-description">@ticket.Descripcion</div>
+                                </div>
+                                <div class="ticket-arrow">›</div>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+   
+</body>
+</html>
+
