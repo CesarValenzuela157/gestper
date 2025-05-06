@@ -1,3 +1,4 @@
+@model Gestper.Models.Ticket
 
 @{
     ViewData["Title"] = "Gestión del Ticket";
@@ -10,15 +11,15 @@
     }
 
     .bg-primary-light {
-        background-color: var(--primary-light);
+        background-color: rgba(66, 103, 178, 0.2); /* Azul claro */
     }
 
     .text-primary-custom {
-        color: var(--primary-color);
+        color: #4267B2; /* Azul */
     }
 
     .btn-primary-custom {
-        background-color: var(--primary-color);
+        background-color: #4267B2; /* Azul */
         color: white;
     }
 
@@ -57,45 +58,49 @@
         <div class="row g-0">
             <!-- Panel Izquierdo -->
             <div class="col-md-2 p-3 border-end bg-primary-light">
-                <a asp-controller="Home" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3"></a>
+                <a asp-controller="HomeControllerAdmin" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3"></a>
 
-                <p class="mt-4"><strong>ID del ticket</strong><br />0</p>
-                <p><strong>Creado por</strong><br />Usuario</p>
-                <p><strong>Fecha de creación</strong><br />00/00/00</p>
+                <p class="mt-4"><strong>ID del ticket</strong><br />@Model.IdTicket</p>
+                <p><strong>Creado por</strong><br />@Model.IdUsuario</p>
+                <p><strong>Fecha de creación</strong><br />@Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
             </div>
 
             <!-- Panel Derecho -->
             <div class="col-md-8 p-4"> 
                 <h5 class="mb-4 text-primary-custom">Gestionar ticket</h5>
 
-                <div class="mb-3">
-                    <label class="form-label">Título</label>
-                    <input type="text" class="form-control" />
-                </div>
+                <form asp-action="Guardar" asp-controller="HomeControllerAdmin" method="post">
+                    <input type="hidden" name="IdTicket" value="@Model.IdTicket" />
 
-                <div class="mb-3">
-                    <label class="form-label">Descripción</label>
-                    <textarea class="form-control" rows="2"></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" name="Titulo" value="@Model.Titulo" />
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Asignado a</label>
-                    <input type="text" class="form-control" placeholder="Ingrese trabajador a buscar" translate="no"/>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" name="Descripcion" rows="2">@Model.Descripcion</textarea>
+                    </div>
 
-                <div class="mb-4"> 
-                    <label class="form-label">Prioridad</label>
-                    <select class="form-select">
-                        <option selected disabled>Seleccione prioridad</option>
-                        <option>Baja</option>
-                        <option>Media</option>
-                        <option>Alta</option>
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Asignado a</label>
+                        <input type="text" class="form-control" name="AsignadoA" placeholder="Ingrese trabajador a buscar" translate="no" value="@Model.IdUsuario" />
+                    </div>
 
-                <div class="d-grid">
-                    <button class="btn btn-primary-custom">Guardar</button>
-                </div>
+                    <div class="mb-4"> 
+                        <label class="form-label">Prioridad</label>
+                        <select class="form-select" name="Prioridad">
+                            <option disabled>Seleccione prioridad</option>
+                            <option value="Baja" selected="@(Model.IdPrioridad == 3)">Baja</option>
+                            <option value="Media" selected="@(Model.IdPrioridad == 2)">Media</option>
+                            <option value="Alta" selected="@(Model.IdPrioridad == 1)">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary-custom">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

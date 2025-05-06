@@ -1,34 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
 using Gestper.Models;
+using Gestper.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestper.Controllers
 {
     public class HomeControllerAdmin : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeControllerAdmin(ApplicationDbContext context)
         {
-            var tickets = new List<TicketAdmin>
-            {
-                new TicketAdmin
-                {
-                    Id = 1,
-                    NombreConsulta = "Ejemplo de consulta",
-                    Descripcion = "Esto es una descripción de prueba",
-                    Estado = "Nuevo",
-                    Prioridad = "Alta",
-                    Departamento = "Soporte",
-                    CreadoPor = "Juan",
-                    FechaCreacion = DateTime.Now
-                }
-            };
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var tickets = await _context.Tickets
+                .OrderByDescending(t => t.FechaCreacion)
+                .ToListAsync();
 
             return View("IndexAdmin", tickets);
         }
 
-
-        public IActionResult Detalle()
+        public async Task<IActionResult> Detalle(int id)
         {
-            return View("DetalleTicket");
+            var ticket = await _context.Tickets
+                .FirstOrDefaultAsync(t => t.IdTicket == id);
+
+            if (ticket == null)
+                return NotFound();
+
+            return View("DetalleTicket", ticket);
         }
     }
 }

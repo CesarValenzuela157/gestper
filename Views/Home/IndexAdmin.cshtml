@@ -1,7 +1,6 @@
-@model List<Gestper.Models.TicketAdmin>
+@model List<Gestper.Models.Ticket>
 @{
     Layout = null;
-    
 }
 
 <!DOCTYPE html>
@@ -10,7 +9,6 @@
     <meta charset="UTF-8">
     <title>Gestper</title>
     <style>
-        
         html, body {
             margin: 0;
             padding: 0;
@@ -127,12 +125,12 @@
 
         .filters select {
             padding: 6px;
-            border-radius: 100px; /* Ovalado */
+            border-radius: 100px;
             border: 1px solid #999;
             width: 160px;
             font-family: Arial, sans-serif;
         }
-        
+
         .tickets {
             padding: 20px;
             overflow-y: auto;
@@ -199,7 +197,7 @@
         .ticket-title {
             font-weight: bold;
             font-size: 16px;
-            margin-top: 25px; 
+            margin-top: 25px;
             margin-bottom: 4px;
         }
 
@@ -270,18 +268,17 @@
             <div class="tickets">
                 @foreach (var ticket in Model)
                 {
-                    <a href="@Url.Action("Detalle", "Home", new { id = ticket.Id })" class="ticket-link">
-
+                    <a href="@Url.Action("Detalle", "HomeControllerAdmin", new { id = ticket.IdTicket })" class="ticket-link">
                         <div class="ticket">
                             <div class="ticket-content">
                                 <div class="ticket-info">
                                     <div class="ticket-metadata">
-                                        <span><strong>Ticket ID:</strong> @ticket.Id</span>
-                                        <span><strong>Creado por:</strong> @ticket.CreadoPor</span>
-                                        <span><strong>Hora de creación:</strong> @ticket.FechaCreacion.ToString("HH:mm")</span>
-                                        <span><strong>Fecha de creación:</strong> @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
+                                        <span><strong>ID:</strong> @ticket.IdTicket</span>
+                                        <span><strong>ID Usuario:</strong> @ticket.IdUsuario</span>
+                                        <span><strong>Hora:</strong> @ticket.FechaCreacion.ToString("HH:mm")</span>
+                                        <span><strong>Fecha:</strong> @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
                                     </div>
-                                    <div class="ticket-title">@ticket.NombreConsulta</div>
+                                    <div class="ticket-title">@ticket.Titulo</div>
                                     <div class="ticket-description">@ticket.Descripcion</div>
                                 </div>
                                 <div class="ticket-arrow">›</div>
@@ -292,8 +289,5 @@
             </div>
         </div>
     </div>
-
-   
 </body>
 </html>
-
