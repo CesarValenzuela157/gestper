@@ -1,0 +1,21 @@
+@model IEnumerable<Gestper.Models.Producto>
+
+<h2>Listado de Productos</h2>
+
+<div class="productos-container">
+    @foreach (var producto in Model)
+    {
+        <div class="producto-card">
+            <h3 class="producto-nombre">@producto.Nombre</h3>
+            <p class="producto-precio">$@producto.Precio</p>
+            <p class="producto-descripcion">@producto.Descripcion</p>
+            <div class="acciones">
+                <a href="@Url.Action("Edit", "Producto", new { id = producto.Id })" class="editar-btn">Editar</a>
+                <a href="@Url.Action("Delete", "Producto", new { id = producto.Id })" class="eliminar-btn">Eliminar</a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Botón para agregar nuevo producto -->
+<a href="@Url.Action("Create", "Producto")" class="agregar-btn">Añadir Producto</a>

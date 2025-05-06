@@ -1,0 +1,25 @@
+@model Gestper.Models.Producto
+
+<h2>Crear Producto</h2>
+
+<form asp-action="Create" method="post" class="form-container">
+    <div class="form-group">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-input" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Precio" class="form-label"></label>
+        <input asp-for="Precio" class="form-input" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <textarea asp-for="Descripcion" class="form-textarea"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="submit-btn">Guardar</button>
+</form>
