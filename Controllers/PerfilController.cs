@@ -56,7 +56,7 @@ namespace Gestper.Controllers
         public async Task<IActionResult> Editar(Usuario usuarioEditado)
         {
             ModelState.Remove("Contraseña");
-            
+
             if (ModelState.IsValid)
             {
                 try
@@ -70,15 +70,17 @@ namespace Gestper.Controllers
                         usuarioExistente.Apellido = usuarioEditado.Apellido;
                         usuarioExistente.Correo = usuarioEditado.Correo;
                         usuarioExistente.Telefono = usuarioEditado.Telefono;
-                        
-                        
+
                         await _context.SaveChangesAsync();
-                        TempData["Mensaje"] = "Perfil actualizado correctamente";
-                        return RedirectToAction("Index");
+
+                        TempData["MensajeExito"] = "Perfil actualizado correctamente.";
+
+                        // ⬇ Redirige a la vista CRUD, no a la pública
+                        return RedirectToAction("Perfil", "CRUD");
                     }
                     else
                     {
-                        ModelState.AddModelError("", "No se encontró el usuario");
+                        ModelState.AddModelError("", "No se encontró el usuario.");
                     }
                 }
                 catch (Exception ex)
@@ -86,7 +88,7 @@ namespace Gestper.Controllers
                     ModelState.AddModelError("", "Error al actualizar: " + ex.Message);
                 }
             }
-            
+
             return View(usuarioEditado);
         }
     }

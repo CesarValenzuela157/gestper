@@ -2,25 +2,29 @@ using Microsoft.AspNetCore.Mvc;
 using Gestper.Models;
 using Gestper.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Gestper.Controllers
 {
-    public class HomeControllerAdmin : Controller
+    public class TrabajadorController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public HomeControllerAdmin(ApplicationDbContext context)
+        public TrabajadorController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index(int? idDepartamento, int? idEstado, int? idPrioridad, int? idBusqueda)
         {
-            if (HttpContext.Session.GetString("UsuarioRol") != "1")
+            if (HttpContext.Session.GetString("UsuarioRol") != "2")
                 return RedirectToAction("Login", "Usuario");
+
+            int idUsuario = int.Parse(HttpContext.Session.GetString("UsuarioId"));
 
             var ticketsQuery = _context.Tickets
                 .Include(t => t.Usuario)
+                .Where(t => t.IdSoporteAsignado == idUsuario) // Solo los asignados a ese trabajador
                 .AsQueryable();
 
             if (idDepartamento.HasValue)
@@ -46,29 +50,33 @@ namespace Gestper.Controllers
 
             ViewBag.Departamentos = await _context.Departamentos.ToListAsync();
 
-            return View("~/Views/Home/IndexAdmin.cshtml", tickets);
-        }
-        
-        [HttpPost]
-        public IActionResult CerrarSesion()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login", "Usuario");
+            return View("~/Views/Home/Index_Trabajador.cshtml", tickets);
+
         }
 
         public async Task<IActionResult> Detalle(int id)
         {
             var ticket = await _context.Tickets
-                .Include(t => t.Usuario)
                 .Include(t => t.Estado)
-                .Include(t => t.Prioridad)
-                .Include(t => t.SoporteAsignado)
                 .FirstOrDefaultAsync(t => t.IdTicket == id);
 
             if (ticket == null)
+            {
                 return NotFound();
+            }
 
-            return View("~/Views/Home/DetalleTicket.cshtml", ticket);
+            return View("Detalle_Trabajador", ticket);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

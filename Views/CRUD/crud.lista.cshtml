@@ -1,19 +1,19 @@
 @model IEnumerable<Gestper.Models.Ticket>
 
 @{
-    ViewBag.Title = "Listado de Tickets";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Asegúrate que tu layout esté en esta ruta
+    ViewBag.Title = "Mis Tickets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <h1 class="text-primary mb-4">Listado de Tickets</h1>
-            <p class="mb-4">Aquí puedes ver todos los tickets registrados en el sistema.</p>
+            <h1 class="text-primary mb-4">Mis Tickets</h1>
+            <p class="mb-4">Aquí puedes ver todos los tickets que has registrado.</p>
 
             @if (!Model.Any())
             {
-                <div class="alert alert-info">No hay tickets registrados actualmente.</div>
+                <div class="alert alert-info">No tienes tickets registrados actualmente.</div>
             }
             else
             {

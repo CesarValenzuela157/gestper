@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Gestper.Models;
 using Gestper.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace Gestper.Controllers
@@ -28,22 +29,22 @@ namespace Gestper.Controllers
         {
             if (ModelState.IsValid)
             {
-                usuario.IdRol = 3; // Asignamos el rol de usuario normal
-                usuario.Activo = true; // Marcamos al usuario como activo
+                usuario.IdRol = 3; // Rol usuario normal
+                usuario.Activo = true;
 
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index", "Home"); // Redirige a la página principal después de registrarse
+                return RedirectToAction("Index", "Home");
             }
 
-            return View("Views/registro/registro.layout.cshtml"); // Si hay errores, se vuelve a mostrar el formulario
+            return View("Views/registro/registro.layout.cshtml", usuario);
         }
 
         // GET: Usuario/Login
         public IActionResult Login()
         {
-            return View("Views/login/login.layout.cshtml");
+            return View("Views/login/login.layout.cshtml", new LoginViewModel());
         }
 
         // POST: Usuario/Login con LoginViewModel
@@ -51,40 +52,37 @@ namespace Gestper.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Buscar al usuario en la base de datos por correo
-                var usuario = await _context.Usuarios
-                    .FirstOrDefaultAsync(u => u.Correo == model.Correo);
-
-                // Si el usuario existe
-                if (ModelState.IsValid)
-                {
-                    // Verificar la contraseña (deberías encriptar las contraseñas en un entorno real)
-                    if (usuario.Contrasena == model.Contrasena)
-                    {
-                        // Guardar información del usuario en la sesión
-                        HttpContext.Session.SetString("UsuarioCorreo", usuario.Correo);
-                        HttpContext.Session.SetString("UsuarioId", usuario.IdUsuario.ToString());
-
-                        // Redirigir al perfil del usuario
-                        return RedirectToAction("Index", "Perfil");
-                    }
-                    else
-                    {
-                        // Si la contraseña no es correcta
-                        ModelState.AddModelError(string.Empty, "Contraseña incorrecta.");
-                    }
-                }
-                else
-                {
-                    // Si no se encuentra al usuario
-                    ModelState.AddModelError(string.Empty, "Usuario no encontrado.");
-                }
+                return View("Views/login/login.layout.cshtml", model);
             }
 
-            // Si algo falla, volvemos a mostrar el formulario de login con el error
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Correo == model.Correo);
+
+            if (usuario != null && usuario.Contrasena == model.Contrasena)
+            {
+                HttpContext.Session.SetString("UsuarioCorreo", usuario.Correo);
+                HttpContext.Session.SetString("UsuarioId", usuario.IdUsuario.ToString());
+                HttpContext.Session.SetString("UsuarioRol", usuario.IdRol.ToString());
+
+                return usuario.IdRol switch
+                {
+                    1 => RedirectToAction("Index", "HomeControllerAdmin"),
+                    2 => RedirectToAction("Index", "Trabajador"),
+                    _ => RedirectToAction("Index", "CRUD"),
+                };
+            }
+
+            ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos.");
             return View("Views/login/login.layout.cshtml", model);
+        }
+
+        [HttpPost]
+        public IActionResult CerrarSesion()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Usuario");
         }
     }
 }

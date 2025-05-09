@@ -1,16 +1,59 @@
-<h2>Iniciar sesión</h2>
+@model Gestper.Models.LoginViewModel
 
-<form method="post">
-    <div class="form-group">
-        <label for="Correo">Correo</label>
-        <input type="email" class="form-control" id="Correo" name="Correo" required />
+@{
+    ViewData["Title"] = "Iniciar sesión";
+    Layout = "_Layout";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</h2>
+                </div>
+                <div class="card-body px-4 py-4">
+                    @* Mostrar error general *@
+                    @if (!string.IsNullOrEmpty(ViewBag.MensajeError as string))
+                    {
+                        <div class="alert alert-danger text-center fw-semibold">
+                            @ViewBag.MensajeError
+                        </div>
+                    }
+
+                    <form asp-action="Login" asp-controller="Usuario" method="post" novalidate>
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-semibold">Correo</label>
+                            <input asp-for="Correo" class="form-control" type="email" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Contrasena" class="form-label fw-semibold">Contraseña</label>
+                            <input asp-for="Contrasena" class="form-control" type="password" />
+                            <span asp-validation-for="Contrasena" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="/Usuario/Registrar" class="btn btn-secondary btn-sm">
+                            <i class="bi bi-person-plus-fill"></i> Registrar nuevo usuario
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="Contrasena">Contraseña</label>
-        <input type="password" class="form-control" id="Contrasena" name="Contrasena" required />
-    </div>
+</div>
 
-    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-</form>
-
-<a href="@Url.Action("Registrar", "Usuario")" class="btn btn-secondary mt-3">Registrar nuevo usuario</a>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

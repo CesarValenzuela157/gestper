@@ -2,14 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gestper.Models;
 
-public class modeloprioridad
-{
-    
-}
-
-public class prioridad
+public class Prioridad
 {
     [Key]
-    public int Idprioridad { get; set; }
-    public string Nombreprioridad { get; set; }
+    public int IdPrioridad { get; set; }
+    public string NombrePrioridad { get; set; }
 }

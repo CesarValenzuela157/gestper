@@ -1,0 +1,112 @@
+@model List<Gestper.Models.Ticket>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Panel CRUD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        /* Estilos del contenido y tabla */
+        .btn-profile {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-profile:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn-action {
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+
+        .btn-action:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<!-- Barra lateral y otras secciones -->
+
+<!-- Botón para ver el perfil -->
+<a href="/CRUD/Perfil" class="btn-profile">Ver mi perfil</a>
+
+<h2>Gestión de Tickets</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Título</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var ticket in Model)
+        {
+            <tr>
+                <td>@ticket.Titulo</td>
+                <td>@ticket.Estado?.NombreEstado</td>
+                <td>
+                    <a asp-controller="Ticket" asp-action="Edit" asp-route-id="@ticket.IdTicket" class="btn-action">Editar</a>
+                            
+                    <!-- Formulario de eliminación -->
+                    <form method="post" asp-controller="Ticket" asp-action="Delete" asp-route-id="@ticket.IdTicket" style="display:inline;">
+                        <button type="submit" class="btn-action btn-delete">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="3">No hay tickets disponibles.</td>
+        </tr>
+    }
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,46 +1,72 @@
 @model Gestper.Models.Usuario
 
-<h1>Editar Perfil</h1>
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success text-center fw-semibold">
+        @TempData["MensajeExito"]
+    </div>
+}
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Editar" asp-controller="Perfil" method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="IdUsuario" />
-            <input type="hidden" asp-for="Contrasena" />
-            <input type="hidden" asp-for="IdRol" />
-            <input type="hidden" asp-for="Activo" />
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 750px;">
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+            <h2 class="mb-0">Editar Perfil</h2>
+        </div>
+        <div class="card-body px-5 py-4">
+            <form asp-action="Editar" asp-controller="Perfil" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdUsuario" />
+                <input type="hidden" asp-for="Contrasena" />
+                <input type="hidden" asp-for="IdRol" />
+                <input type="hidden" asp-for="Activo" />
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label">Nombre</label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label fw-semibold">Nombre</label>
+                        <input asp-for="Nombre" class="form-control form-control-lg" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellido" class="form-label fw-semibold">Apellido</label>
+                        <input asp-for="Apellido" class="form-control form-control-lg" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Apellido" class="form-label">Apellido</label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-            </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Correo" class="form-label fw-semibold">Correo Electrónico</label>
+                        <input asp-for="Correo" class="form-control form-control-lg" type="email" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Telefono" class="form-label fw-semibold">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control form-control-lg" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Correo" class="form-label">Correo</label>
-                <input asp-for="Correo" class="form-control" type="email" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Telefono" class="form-label">Teléfono</label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-success">Guardar cambios</button>
-            <a asp-action="Index" asp-controller="Perfil" class="btn btn-secondary">Cancelar</a>
-        </form>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-lg me-2 px-4">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                    <button type="button" onclick="cancelarEdicion()" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<script>
+    function cancelarEdicion() {
+        document.getElementById('editarPerfil').style.display = 'none';
+        document.getElementById('vistaPerfil').style.display = 'block';
+    }
+</script>
+

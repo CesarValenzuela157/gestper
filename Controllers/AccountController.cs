@@ -1,17 +1,25 @@
-
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Gestper.Data;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Gestper.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public AccountController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         // GET: /Account/Login
         [HttpGet]
         public IActionResult Login()
         {
-            // Si se accede directamente a la URL, redirigir a la página de inicio
             return RedirectToAction("Index", "Home");
         }
 
@@ -20,24 +28,26 @@ namespace Gestper.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string username, string password, bool rememberMe = false)
         {
-            // Aquí implementarías la lógica real de autenticación
-            // Este es solo un ejemplo básico
-            
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 TempData["LoginError"] = "Usuario y contraseña son requeridos.";
                 return RedirectToAction("Index", "Home");
             }
 
-            // Simulación de autenticación (reemplazar con tu lógica real)
-            if (username == "admin" && password == "admin123")
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Correo == username && u.Contrasena == password && u.Activo);
+
+            if (usuario != null)
             {
-                // Autenticación exitosa - aquí implementarías la lógica real con Identity o tu sistema de autenticación
+                // Guardar datos en sesión
+                HttpContext.Session.SetString("UsuarioCorreo", usuario.Correo);
+                HttpContext.Session.SetInt32("IdUsuario", usuario.IdUsuario);
+
+                TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
                 return RedirectToAction("Dashboard", "Home");
             }
             else
             {
-                // Autenticación fallida
                 TempData["LoginError"] = "Usuario o contraseña incorrectos.";
                 return RedirectToAction("Index", "Home");
             }
@@ -48,18 +58,13 @@ namespace Gestper.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(string name, string email, string username, string password, string confirmPassword)
         {
-            // Aquí implementarías la lógica real de registro
-            // Este es solo un ejemplo básico
-            
             if (password != confirmPassword)
             {
                 TempData["RegisterError"] = "Las contraseñas no coinciden.";
                 return RedirectToAction("Index", "Home");
             }
 
-            // Simulación de registro (reemplazar con tu lógica real)
-            // En una aplicación real, aquí crearías el usuario en la base de datos
-            
+            // Lógica de registro simulada (debes reemplazar con tu lógica real)
             TempData["SuccessMessage"] = "Registro exitoso. Ahora puede iniciar sesión.";
             return RedirectToAction("Index", "Home");
         }
@@ -67,10 +72,11 @@ namespace Gestper.Controllers
         // POST: /Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            // Aquí implementarías la lógica real de cierre de sesión
-            
+            // Limpiar sesión
+            HttpContext.Session.Clear();
+            TempData["SuccessMessage"] = "Sesión cerrada correctamente.";
             return RedirectToAction("Index", "Home");
         }
     }

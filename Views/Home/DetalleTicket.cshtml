@@ -61,7 +61,7 @@
                 <a asp-controller="HomeControllerAdmin" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3"></a>
 
                 <p class="mt-4"><strong>ID del ticket</strong><br />@Model.IdTicket</p>
-                <p><strong>Creado por</strong><br />@Model.IdUsuario</p>
+                <p><strong>Creado por</strong><br />@Model.Usuario?.Nombre @Model.Usuario?.Apellido</p>
                 <p><strong>Fecha de creación</strong><br />@Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
             </div>
 
@@ -84,7 +84,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Asignado a</label>
-                        <input type="text" class="form-control" name="AsignadoA" placeholder="Ingrese trabajador a buscar" translate="no" value="@Model.IdUsuario" />
+                        <input type="text" class="form-control" name="AsignadoA" placeholder="Ingrese trabajador a buscar" translate="no" value="@Model.SoporteAsignado?.Nombre @Model.SoporteAsignado?.Apellido" />
                     </div>
 
                     <div class="mb-4"> 

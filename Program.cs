@@ -1,5 +1,7 @@
-using Gestper.Data;  // Importa el namespace del ApplicationDbContext
+using Gestper.Data;
 using Microsoft.EntityFrameworkCore;
+using Gestper.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Configura la conexión a la base de datos usando LocalDB
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Registra el servicio de email
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Agrega soporte para controladores y vistas (MVC)
 builder.Services.AddControllersWithViews();
@@ -19,6 +24,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+
 var app = builder.Build();
 
 // Configura el pipeline de la solicitud HTTP.
@@ -28,9 +34,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseSession();
-app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
@@ -41,6 +48,5 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

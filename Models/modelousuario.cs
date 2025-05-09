@@ -20,4 +20,5 @@ public class Usuario
     public int IdRol { get; set; }  // Este será 3 por defecto al registrar
 
     public bool Activo { get; set; }
+    
 }

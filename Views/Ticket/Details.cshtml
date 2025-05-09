@@ -1,0 +1,228 @@
+@model Gestper.Models.Ticket
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Detalle del Ticket";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Detalle del Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <div class="sidebar">
+        <img src="~/images/logo.png" alt="Logo Gestper" />
+        <a href="/CRUD/Perfil">Perfil</a>
+        <a asp-controller="Ticket" asp-action="Create">Creacion de Ticket</a>
+        <a asp-controller="CRUD" asp-action="TicketsCreados">Lista de mis Tickets</a>
+    </div>
+
+    <div class="main">
+        <div class="card">
+            <div class="card-header">Detalle del Ticket</div>
+            <div class="card-body text-center">
+                <h3 class="mb-3">@Model.Titulo</h3>
+
+                <p>
+                    <span class="badge @ObtenerClaseEstado(Model.Estado?.NombreEstado)">
+                        @Model.Estado?.NombreEstado
+                    </span>
+                    <span class="badge @ObtenerClasePrioridad(Model.Prioridad?.NombrePrioridad)">
+                        Prioridad: @Model.Prioridad?.NombrePrioridad
+                    </span>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5>Descripción</h5>
+                        <p class="dato-perfil">@Model.Descripcion</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5>Categoría</h5>
+                        <p class="dato-perfil">@Model.Categoria?.Nombre</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5>Departamento</h5>
+                        <p class="dato-perfil">@Model.Departamento?.Nombre</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5>Fecha de Creación</h5>
+                        <p class="dato-perfil">@Model.FechaCreacion.ToString("dd-MM-yyyy HH:mm")</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                <a asp-controller="CRUD" asp-action="TicketsCreados">Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #eef6ff;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #007BFF;
+            color: white;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            text-align: center;
+        }
+
+        .sidebar img {
+            display: block;
+            margin: 0 auto 30px;
+            max-width: 150px;
+            height: auto;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #0056b3;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 25px 40px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card-header {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            border-radius: 6px 6px 0 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .card-body h5 {
+            margin-bottom: 5px;
+            color: #007BFF;
+        }
+
+        .dato-perfil {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.95em;
+            margin: 0 4px;
+        }
+
+        .badge-abierto {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .badge-enproceso {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .badge-resuelto {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .badge-cerrado {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .badge-alta {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-media {
+            background-color: #fd7e14;
+            color: white;
+        }
+
+        .badge-baja {
+            background-color: #20c997;
+            color: white;
+        }
+
+        .btn-volver {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn-volver:hover {
+            background-color: #5a6268;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .col-md-6 {
+            width: 48%;
+        }
+    </style>
+
+    @functions {
+        public string ObtenerClaseEstado(string estado)
+        {
+            return estado?.ToLower() switch
+            {
+                "abierto" => "badge badge-abierto",
+                "en proceso" => "badge badge-enproceso",
+                "resuelto" => "badge badge-resuelto",
+                "cerrado" => "badge badge-cerrado",
+                _ => "badge"
+            };
+        }
+
+        public string ObtenerClasePrioridad(string prioridad)
+        {
+            return prioridad?.ToLower() switch
+            {
+                "alta" => "badge badge-alta",
+                "media" => "badge badge-media",
+                "baja" => "badge badge-baja",
+                _ => "badge"
+            };
+        }
+    }
+</body>
+</html>

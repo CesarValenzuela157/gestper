@@ -1,0 +1,31 @@
+@model gestper.Models.EncuestaViewModel
+
+@{
+    ViewData["Title"] = "Encuesta de Satisfacción";
+}
+
+<h2>Encuesta de Satisfacción</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Calificacion"></label>
+        <input asp-for="Calificacion" type="number" min="1" max="5" class="form-control" />
+        <span asp-validation-for="Calificacion" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comentarios"></label>
+        <textarea asp-for="Comentarios" class="form-control"></textarea>
+        <span asp-validation-for="Comentarios" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
