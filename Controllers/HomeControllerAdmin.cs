@@ -21,6 +21,8 @@ namespace Gestper.Controllers
 
             var ticketsQuery = _context.Tickets
                 .Include(t => t.Usuario)
+                .Include(t => t.Prioridad)
+                .Include(t => t.SoporteAsignado)
                 .AsQueryable();
 
             if (idDepartamento.HasValue)
@@ -45,6 +47,7 @@ namespace Gestper.Controllers
             ViewBag.Cerrados = tickets.Count(t => t.IdEstado == 3);
 
             ViewBag.Departamentos = await _context.Departamentos.ToListAsync();
+            ViewBag.Prioridades = await _context.Prioridades.ToListAsync();
 
             return View("~/Views/Home/IndexAdmin.cshtml", tickets);
         }
@@ -60,15 +63,40 @@ namespace Gestper.Controllers
         {
             var ticket = await _context.Tickets
                 .Include(t => t.Usuario)
-                .Include(t => t.Estado)
                 .Include(t => t.Prioridad)
                 .Include(t => t.SoporteAsignado)
                 .FirstOrDefaultAsync(t => t.IdTicket == id);
 
             if (ticket == null)
                 return NotFound();
+            
+            var trabajadores = await _context.Usuarios
+                .Where(u => u.IdRol == 2)
+                .ToListAsync();
+
+            ViewBag.Trabajadores = trabajadores;
+            ViewBag.Estados = await _context.Estados.ToListAsync();
 
             return View("~/Views/Home/DetalleTicket.cshtml", ticket);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Guardar(Ticket ticket)
+        {
+            var ticketExistente = await _context.Tickets.FindAsync(ticket.IdTicket);
+            if (ticketExistente == null)
+                return NotFound();
+
+            ticketExistente.Titulo = ticket.Titulo;
+            ticketExistente.Descripcion = ticket.Descripcion;
+            ticketExistente.IdSoporteAsignado = ticket.IdSoporteAsignado;
+            ticketExistente.IdPrioridad = ticket.IdPrioridad;
+            ticketExistente.IdEstado = ticket.IdEstado;
+
+            await _context.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Ticket actualizado correctamente";
+            return RedirectToAction("Index", "HomeControllerAdmin");
         }
     }
 }

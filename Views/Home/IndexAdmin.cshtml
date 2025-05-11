@@ -176,8 +176,15 @@
                         <option value="">Seleccione estado</option>
                     </select>
 
-                    <select name="idPrioridad">
+                    <select name="idPrioridad" onchange="this.form.submit()">
                         <option value="">Seleccione prioridad</option>
+                        @foreach (var prioridad in ViewBag.Prioridades)
+                        {
+                            var selected = Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString() ? "selected" : "";
+                            <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
+                                @prioridad.NombrePrioridad
+                            </option>
+                        }
                     </select>
 
                     <select name="idDepartamento" onchange="this.form.submit()">
@@ -190,6 +197,9 @@
                     </select>
 
                     <button type="submit" hidden>Buscar</button>
+                    <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn btn-outline-secondary" style="border-radius: 100px; padding: 6px 20px;">
+                        Limpiar filtros
+                    </a>
                 </div>
             </form>
 
@@ -204,8 +214,9 @@
                             </div>
                             <div class="ticket-description">@ticket.Titulo</div>
                             <div class="ticket-meta">
-                                <span>Hora de creación: @ticket.FechaCreacion.ToString("HH:mm")</span>
                                 <span>Fecha de creación: @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
+                                <span>Prioridad: @ticket.Prioridad?.NombrePrioridad</span>
+                                <span>Asignado a: @ticket.SoporteAsignado?.Nombre @ticket.SoporteAsignado?.Apellido</span>
                             </div>
                         </div>
                     </a>

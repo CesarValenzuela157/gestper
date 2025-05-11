@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Gestión del Ticket";
+    string rol = Context.Session.GetString("UsuarioRol") ?? "";
+    var trabajadores = ViewBag.Trabajadores as List<Gestper.Models.Usuario>;
+    var asignado = trabajadores?.FirstOrDefault(t => t.IdUsuario == Model.IdSoporteAsignado);
+    var controlador = Context.Session.GetString("UsuarioRol") == "1" ? "HomeControllerAdmin" : "Trabajador";
+
 }
 
 <style>
@@ -58,7 +63,14 @@
         <div class="row g-0">
             <!-- Panel Izquierdo -->
             <div class="col-md-2 p-3 border-end bg-primary-light">
-                <a asp-controller="HomeControllerAdmin" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3"></a>
+                @if (rol == "1")
+                {
+                    <a asp-controller="HomeControllerAdmin" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3">← Volver</a>
+                }
+                else if (rol == "2")
+                {
+                    <a asp-controller="Trabajador" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3">← Volver</a>
+                }
 
                 <p class="mt-4"><strong>ID del ticket</strong><br />@Model.IdTicket</p>
                 <p><strong>Creado por</strong><br />@Model.Usuario?.Nombre @Model.Usuario?.Apellido</p>
@@ -68,8 +80,8 @@
             <!-- Panel Derecho -->
             <div class="col-md-8 p-4"> 
                 <h5 class="mb-4 text-primary-custom">Gestionar ticket</h5>
-
-                <form asp-action="Guardar" asp-controller="HomeControllerAdmin" method="post">
+                
+                <form asp-action="Guardar" asp-controller="@controlador" method="post">
                     <input type="hidden" name="IdTicket" value="@Model.IdTicket" />
 
                     <div class="mb-3">
@@ -81,19 +93,51 @@
                         <label class="form-label">Descripción</label>
                         <textarea class="form-control" name="Descripcion" rows="2">@Model.Descripcion</textarea>
                     </div>
+                    
 
-                    <div class="mb-3">
-                        <label class="form-label">Asignado a</label>
-                        <input type="text" class="form-control" name="AsignadoA" placeholder="Ingrese trabajador a buscar" translate="no" value="@Model.SoporteAsignado?.Nombre @Model.SoporteAsignado?.Apellido" />
-                    </div>
+                    @if (rol == "2")
+                    {
+                        <div class="mb-3 d-none">
+                            <label class="form-label">Asignado a</label>
+                            <input type="text" class="form-control" value="@($"{asignado?.Nombre} {asignado?.Apellido}")" readonly />
+                            <input type="hidden" name="IdSoporteAsignado" value="@Model.IdSoporteAsignado" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Asignado a</label>
+                            <select class="form-control" name="IdSoporteAsignado">
+                                <option value="">Sin asignar</option>
+                                @foreach (var trabajador in (List<Gestper.Models.Usuario>)ViewBag.Trabajadores)
+                                {
+                                    var seleccionado = Model.IdSoporteAsignado == trabajador.IdUsuario ? "selected" : "";
+                                    @:<option value="@trabajador.IdUsuario" @seleccionado>@trabajador.Nombre @trabajador.Apellido</option>
+                                }
+                            </select>
+                        </div>
+                    }
 
                     <div class="mb-4"> 
                         <label class="form-label">Prioridad</label>
-                        <select class="form-select" name="Prioridad">
+                        <select class="form-select" name="IdPrioridad">
                             <option disabled>Seleccione prioridad</option>
-                            <option value="Baja" selected="@(Model.IdPrioridad == 3)">Baja</option>
-                            <option value="Media" selected="@(Model.IdPrioridad == 2)">Media</option>
-                            <option value="Alta" selected="@(Model.IdPrioridad == 1)">Alta</option>
+                            <option value="3" selected="@(Model.IdPrioridad == 3)">Baja</option>
+                            <option value="2" selected="@(Model.IdPrioridad == 2)">Media</option>
+                            <option value="1" selected="@(Model.IdPrioridad == 1)">Alta</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" name="IdEstado">
+                            <option disabled>Seleccione estado</option>
+                            @foreach (var estado in ViewBag.Estados)
+                            {
+                                <option value="@estado.IdEstado" selected="@(Model.IdEstado == estado.IdEstado)">
+                                    @estado.NombreEstado
+                                </option>
+                            }
                         </select>
                     </div>
 

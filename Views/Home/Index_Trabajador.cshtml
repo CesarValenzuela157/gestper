@@ -8,14 +8,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestper</title>
+    <title>Gestper - Panel Admin</title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%;
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
+            height: 100vh;
         }
 
         .top-bar {
@@ -34,24 +34,21 @@
             background-color: #e0e0e0;
             padding: 15px;
             font-weight: bold;
-            width: 100%;
-            box-sizing: border-box;
             border-bottom: 4px solid #2f4eb7;
-            margin-top: -1px;
         }
 
         .ticket-summary {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
+            text-align: center;
+        }
+
+        .ticket-summary strong {
+            font-size: 20px;
+            display: block;
         }
 
         .container {
             display: flex;
-            height: calc(100vh - 50px);
-            overflow: hidden;
+            height: calc(100vh - 100px);
         }
 
         .sidebar {
@@ -60,22 +57,15 @@
             border-right: 4px solid #2f4eb7;
             display: flex;
             flex-direction: column;
-            padding: 0;
         }
 
         .sidebar-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 12px 16px;
             font-size: 14px;
             cursor: pointer;
             border-bottom: 1px solid #ccc;
-        }
-
-        .sidebar-item span {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
         }
 
         .sidebar-item.selected {
@@ -83,23 +73,9 @@
             font-weight: bold;
         }
 
-        .arrow-sidebar {
-            font-size: 18px;
-        }
-
-        .logout {
-            justify-content: flex-start;
-            gap: 10px;
+        .sidebar-item.logout {
             font-weight: normal;
-            color: black;
-        }
-
-        .logout:hover {
-            background-color: #dcdcdc;
-        }
-
-        .logout-icon {
-            font-size: 16px;
+            gap: 10px;
         }
 
         .main {
@@ -121,15 +97,7 @@
             padding: 6px 15px;
             border-radius: 100px;
             border: 1px solid #999;
-            box-shadow: none;
-        }
-
-        .filters input {
             width: 200px;
-        }
-
-        .filters select {
-            width: 160px;
         }
 
         .tickets {
@@ -138,145 +106,122 @@
             flex-grow: 1;
         }
 
-        .ticket-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .ticket-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ticket-info {
-            flex: 1;
-        }
-
-        .ticket-arrow {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            margin-left: 20px;
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-
         .ticket {
             background-color: white;
             border: 1px solid #ccc;
             margin-bottom: 10px;
             padding: 15px;
             border-radius: 5px;
-            transition: background-color 0.2s;
         }
 
-        .ticket:hover {
-            background-color: #f0f0f0;
-        }
-
-        .ticket-metadata {
+        .ticket-header {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #444;
-        }
-
-        .ticket-metadata span {
-            flex: 1 1 25%;
-        }
-
-        .ticket-title {
             font-weight: bold;
-            font-size: 16px;
-            margin-top: 25px;
-            margin-bottom: 4px;
         }
 
         .ticket-description {
-            font-size: 14px;
+            margin-top: 5px;
+            color: #333;
+        }
+
+        .ticket-meta {
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <div>
-            <img src="/images/logo.png" style="height:150px;">
-        </div>
-        <div>USUARIO</div>
+        <div><img src="/images/logo.png" style="height: 40px;"></div>
+        <div>@ViewBag.Correo</div>
     </div>
 
     <div class="status-bar">
         <div class="ticket-summary">
-            <div class="count"><strong>@Model.Count</strong></div>
-            <div class="label">TODOS LOS TICKETS</div>
+            <strong>@ViewBag.Total</strong>
+            TODOS LOS TICKETS
         </div>
         <div class="ticket-summary">
-            <div class="count"><strong>@Model.Count(t => t.IdEstado == 1)</strong></div>
-            <div class="label">TICKETS NUEVOS</div>
+            <strong>@ViewBag.Nuevos</strong>
+            TICKETS NUEVOS
         </div>
         <div class="ticket-summary">
-            <div class="count"><strong>@Model.Count(t => t.IdEstado == 2)</strong></div>
-            <div class="label">EN PROGRESO</div>
+            <strong>@ViewBag.EnProgreso</strong>
+            EN PROGRESO
         </div>
         <div class="ticket-summary">
-            <div class="count"><strong>@Model.Count(t => t.IdEstado == 3)</strong></div>
-            <div class="label">CERRADOS</div>
+            <strong>@ViewBag.Cerrados</strong>
+            CERRADOS
         </div>
     </div>
 
     <div class="container">
-        <div class="sidebar">
-            <div class="sidebar-item selected">
-                <span>Todos los tickets</span>
-                <span class="arrow-sidebar">›</span>
-            </div>
-            <div class="sidebar-item logout" onclick="window.location.href = '/Account/Logout'">
-                <span class="logout-icon">⮐</span>
+        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post" style="margin: 0;">
+            <button type="submit" class="sidebar-item logout" style="width: 100%; border: none; background: none; text-align: left;">
+                <span>⮐</span>
                 <span>Cerrar sesión</span>
-            </div>
-        </div>
+            </button>
+        </form>
 
         <div class="main">
-            <div class="filters">
-                <input type="text" placeholder="Ingrese una ID a buscar" />
-                <select>
-                    <option>Seleccione estado</option>
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Cerrado</option>
-                </select>
-                <select>
-                    <option>Seleccione prioridad</option>
-                    <option>Baja</option>
-                    <option>Media</option>
-                    <option>Alta</option>
-                </select>
-                <select>
-                    <option>Departamento</option>
-                </select>
-            </div>
+            <form method="get" asp-controller="Trabajador" asp-action="Index">
+                <div class="filters">
+                    <input type="text" name="idBusqueda" placeholder="Ingrese una ID a buscar" value="@Context.Request.Query["idBusqueda"]" />
+
+                    <select name="idEstado">
+                        <option value="">Seleccione estado</option>
+                        @foreach (var estado in ViewBag.Estados)
+                        {
+                            <option value="@estado.IdEstado" selected="@(Context.Request.Query["idEstado"] == estado.IdEstado.ToString())">
+                                @estado.NombreEstado
+                            </option>
+                        }
+                    </select>
+
+                    <select name="idPrioridad" onchange="this.form.submit()">
+                        <option value="">Seleccione prioridad</option>
+                        @foreach (var prioridad in ViewBag.Prioridades)
+                        {
+                            <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
+                                @prioridad.NombrePrioridad
+                            </option>
+                        }
+                    </select>
+
+                    <select name="idDepartamento" onchange="this.form.submit()">
+                        <option value="">Departamento</option>
+                        @foreach (var dep in ViewBag.Departamentos)
+                        {
+                            <option value="@dep.IdDepartamento" selected="@(Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())">
+                                @dep.Nombre
+                            </option>
+                        }
+                    </select>
+
+                    <button type="submit" hidden>Buscar</button>
+                    <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn btn-outline-secondary" style="border-radius: 100px; padding: 6px 20px;">
+                        Limpiar filtros
+                    </a>
+                </div>
+            </form>
 
             <div class="tickets">
                 @foreach (var ticket in Model)
                 {
-                    <a href="@Url.Action("Detalle", "Trabajador", new { id = ticket.IdTicket })" class="ticket-link">
+                    <a href="@Url.Action("Detalle", "Trabajador", new { id = ticket.IdTicket })" class="ticket-link" style="text-decoration: none; color: inherit;">
                         <div class="ticket">
-                            <div class="ticket-content">
-                                <div class="ticket-info">
-                                    <div class="ticket-metadata">
-                                        <span><strong>ID:</strong> @ticket.IdTicket</span>
-                                        <span><strong>Usuario:</strong> @ticket.IdUsuario</span>
-                                        <span><strong>Hora:</strong> @ticket.FechaCreacion.ToString("HH:mm")</span>
-                                        <span><strong>Fecha:</strong> @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
-                                    </div>
-                                    <div class="ticket-title">@ticket.Titulo</div>
-                                    <div class="ticket-description">@ticket.Descripcion</div>
-                                </div>
-                                <div class="ticket-arrow">›</div>
+                            <div class="ticket-header">
+                                <span><strong>Ticket ID:</strong> @ticket.IdTicket</span>
+                                <span><strong>Creado por:</strong> @ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</span>
+                            </div>
+                            <div class="ticket-description">@ticket.Titulo</div>
+                            <div class="ticket-meta">
+                                <span>Fecha de creación: @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
+                                <span>Prioridad: @ticket.Prioridad?.NombrePrioridad</span>
                             </div>
                         </div>
                     </a>
