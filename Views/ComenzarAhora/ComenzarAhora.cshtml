@@ -1,0 +1,111 @@
+@{
+    ViewBag.Title = "Nuestros Productos";
+}
+
+<style>
+    .product-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #14517b;
+    }
+    
+    .product-subtitle {
+        font-size: 1.2rem;
+        color: #888;
+        margin-bottom: 1rem;
+    }
+    
+    .header-section {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .header-title {
+        font-size: 3.5rem;
+        color: #4dabf7;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+    }
+    
+    .header-description {
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-size: 18px;
+        color: #555;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Título y descripción general -->
+    <div class="header-section">
+        <h1 class="header-title">NUESTROS PRODUCTOS</h1>
+        <p class="header-description">
+            Con GESTPER, ahora no es necesario ser una gran empresa para incorporar TI, su valor razonable permite apoyar la gestión de RRHH y cálculo de remuneraciones a cualquier centro de negocio que tenga dentro de sus valores, como prioridad, a sus trabajadores.
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- GESTPER -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg h-100">
+                <div class="card-body p-4 text-black">
+                    <div class="text-center mb-4">
+                        <h3 class="product-title">gestper</h3>
+                        <p class="product-subtitle">integrado a SAP Business One</p>
+                    </div>
+                    
+                    <p class="text-center">
+                        La solución Gestper permite apoyar la gestión del recurso humano y el cálculo de las remuneraciones integrado a tu solución ERP SAP Business One en plataforma SQL y Hana.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GESTCOM -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg h-100">
+                <div class="card-body p-4 text-black">
+                    <div class="text-center mb-4">
+                        <h3 class="product-title">gestcom</h3>
+                        <p class="product-subtitle">cálculo de comisiones</p>
+                    </div>
+                    
+                    <p class="text-center">
+                        Es una herramienta tecnológica que permite determinar las compensaciones variables del estamento del área comercial en forma oportuna y confiable.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GESTPORT -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg h-100">
+                <div class="card-body p-4 text-black">
+                    <div class="text-center mb-4">
+                        <h3 class="product-title">gestport</h3>
+                        <p class="product-subtitle">portuario y agrícola</p>
+                    </div>
+                    
+                    <p class="text-center">
+                        Administra grupos de personas para remunerar labores agrícolas y portuarias por hora o producción. Con cálculo de semana corrida semanal y detalles para el anexo de liquidación.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-4 text-center">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary px-4 shadow-sm">
+                <i class="bi bi-house-door me-2"></i>Volver al inicio
+            </a>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center mt-5 mb-4">
+        <div class="col-lg-12 text-center">
+            <small class="text-muted">© @DateTime.Now.Year - Soluciones empresariales</small>
+        </div>
+    </div>
+</div>
