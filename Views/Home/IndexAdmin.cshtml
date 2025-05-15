@@ -2,6 +2,10 @@
 @{
     Layout = null;
     var correo = Context.Session.GetString("UsuarioCorreo") ?? "USUARIO";
+    var nombre = Context.Session.GetString("UsuarioNombre") ?? "";
+    var apellido = Context.Session.GetString("UsuarioApellido") ?? "";
+    var nombreCompleto = string.IsNullOrEmpty(nombre) && string.IsNullOrEmpty(apellido) ? "Usuario" : $"{nombre} {apellido}";
+    var inicial = !string.IsNullOrEmpty(nombre) ? nombre[0].ToString() : "U";
 }
 
 <!DOCTYPE html>
@@ -9,230 +13,512 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestper - Panel Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f5f5f5;
             height: 100vh;
+            color: #333;
         }
 
         .top-bar {
-            background-color: #3e5da7;
-            height: 50px;
+            background-color: #3e5da7; /* Mantenemos el azul original */
+            height: 60px;
             color: white;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-around;
-            background-color: #e0e0e0;
-            padding: 15px;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 24px;
             font-weight: bold;
-            border-bottom: 4px solid #2f4eb7;
         }
 
-        .ticket-summary {
-            text-align: center;
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
         }
 
-        .ticket-summary strong {
-            font-size: 20px;
-            display: block;
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+            font-size: 16px;
         }
 
         .container {
             display: flex;
-            height: calc(100vh - 100px);
+            height: calc(100vh - 60px);
         }
 
         .sidebar {
-            width: 220px;
-            background-color: #e0e0e0;
-            border-right: 4px solid #2f4eb7;
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
             display: flex;
             flex-direction: column;
         }
 
-        .sidebar-item {
-            padding: 12px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            border-bottom: 1px solid #ccc;
+        .user-profile {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background-color: #f0f0f0;
+            overflow: hidden;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 30px;
         }
 
-        .sidebar-item.selected {
-            background-color: #d4d4d4;
-            font-weight: bold;
+        .user-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 16px;
         }
 
-        .sidebar-item.logout {
-            font-weight: normal;
-            gap: 10px;
+        .user-email {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .menu-title {
+            padding: 15px 20px 10px;
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background-color: #f0f0f0;
+            border-left: 3px solid #3e5da7;
+            font-weight: 500;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
         }
 
         .main {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #3e5da7;
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-card.all {
+            background-color: #f0f4f8;
+        }
+
+        .stat-card.new {
+            background-color: #e8f4fd;
+        }
+
+        .stat-card.progress {
+            background-color: #fff8e6;
+        }
+
+        .stat-card.closed {
+            background-color: #f0f8f0;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .filters-section {
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .filters-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #333;
         }
 
         .filters {
             display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .filters input,
         .filters select {
-            padding: 6px 15px;
-            border-radius: 100px;
-            border: 1px solid #999;
-            width: 200px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            flex: 1;
+            min-width: 200px;
+            font-family: 'Roboto', sans-serif;
         }
 
-        .tickets {
-            padding: 20px;
-            overflow-y: auto;
-            flex-grow: 1;
+        .btn {
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: none;
+            background-color: #e0e0e0;
+            color: #333;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
         }
 
-        .ticket {
+        .tickets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ticket-item {
             background-color: white;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 5px;
+            border-radius: 4px;
+            padding: 15px 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
         }
 
         .ticket-header {
             display: flex;
             justify-content: space-between;
-            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .ticket-description {
-            margin-top: 5px;
+        .ticket-id {
+            font-weight: 500;
+            color: #3e5da7;
+        }
+
+        .ticket-creator {
+            text-align: right;
+            color: #666;
+        }
+
+        .creator-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .creator-phone {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .ticket-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
             color: #333;
         }
 
         .ticket-meta {
-            font-size: 13px;
-            margin-top: 8px;
             display: flex;
             justify-content: space-between;
-            color: #555;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ticket-date {
+            display: flex;
+            align-items: center;
+        }
+
+        .ticket-date i {
+            margin-right: 5px;
+        }
+
+        .ticket-priority {
+            display: flex;
+            align-items: center;
+        }
+
+        .priority-high {
+            color: #f44336;
+        }
+
+        .priority-medium {
+            color: #ff9800;
+        }
+
+        .priority-low {
+            color: #4caf50;
+        }
+
+        .ticket-assignee {
+            display: flex;
+            align-items: center;
+        }
+
+        .ticket-assignee i {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <div><img src="/images/logo.png" style="height: 120px;"></div>
-        <div>@correo</div>
-    </div>
-
-    <div class="status-bar">
-        <div class="ticket-summary">
-            <strong>@ViewBag.Total</strong>
-            TODOS LOS TICKETS
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.Nuevos</strong>
-            TICKETS NUEVOS
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.EnProgreso</strong>
-            EN PROGRESO
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.Cerrados</strong>
-            CERRADOS
-        </div>
+        <div>GESTPER</div>
+        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+            <button type="submit" class="logout-btn">
+                <i>⮐</i> Cerrar sesión
+            </button>
+        </form>
     </div>
 
     <div class="container">
-        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post" style="padding: 16px; border-right: 4px solid #2f4eb7">
-            <button type="submit" style="
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-weight: bold;
-                cursor: pointer;
-            ">
-                Cerrar sesión
-            </button>
-        </form>
+        <div class="sidebar">
+            <div class="user-profile">
+                <div class="avatar">
+                    <span>@inicial</span>
+                </div>
+                <div class="user-name">@nombreCompleto</div>
+                <div class="user-email">@correo</div>
+            </div>
+            
+            <div class="menu-title">MENÚ</div>
+            <div class="menu">
+                <a href="#" class="menu-item active">
+                    <i>🎫</i>
+                    <span>Tickets</span>
+                </a>
+            </div>
+        </div>
 
         <div class="main">
-            <form method="get" asp-controller="HomeControllerAdmin" asp-action="Index">
-                <div class="filters">
-                    <input type="text" name="idBusqueda" placeholder="Ingrese una ID a buscar" value="@Context.Request.Query["idBusqueda"]" />
-
-                    <select name="idEstado">
-                        <option value="">Seleccione estado</option>
-                    </select>
-
-                    <select name="idPrioridad" onchange="this.form.submit()">
-                        <option value="">Seleccione prioridad</option>
-                        @foreach (var prioridad in ViewBag.Prioridades)
-                        {
-                            var selected = Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString() ? "selected" : "";
-                            <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
-                                @prioridad.NombrePrioridad
-                            </option>
-                        }
-                    </select>
-
-                    <select name="idDepartamento" onchange="this.form.submit()">
-                        <option value="">Departamento</option>
-                        @foreach (var dep in ViewBag.Departamentos)
-                        {
-                            var isSelected = Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString();
-                            @:<option value="@dep.IdDepartamento" @(isSelected ? "selected=\"selected\"" : "")>@dep.Nombre</option>
-                        }
-                    </select>
-
-                    <button type="submit" hidden>Buscar</button>
-                    <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn btn-outline-secondary" style="border-radius: 100px; padding: 6px 20px;">
-                        Limpiar filtros
-                    </a>
+            <div class="breadcrumb">
+                <a href="#">Inicio</a>
+                <span>/</span>
+                <span>Panel de Tickets</span>
+            </div>
+            
+            <h1 class="page-title">Panel de Tickets</h1>
+            
+            <div class="stats-container">
+                <div class="stat-card all">
+                    <div class="stat-number">@ViewBag.Total</div>
+                    <div class="stat-label">Todos los tickets</div>
                 </div>
-            </form>
-
-            <div class="tickets">
-                @foreach (var ticket in Model)
+                <div class="stat-card new">
+                    <div class="stat-number">@ViewBag.Nuevos</div>
+                    <div class="stat-label">Tickets nuevos</div>
+                </div>
+                <div class="stat-card progress">
+                    <div class="stat-number">@ViewBag.EnProgreso</div>
+                    <div class="stat-label">En progreso</div>
+                </div>
+                <div class="stat-card closed">
+                    <div class="stat-number">@ViewBag.Cerrados</div>
+                    <div class="stat-label">Cerrados</div>
+                </div>
+            </div>
+            
+            <div class="filters-section">
+                <div class="filters-title">Filtros de búsqueda</div>
+                <form method="get" asp-controller="HomeControllerAdmin" asp-action="Index">
+                    <div class="filters">
+                        <input type="text" name="idBusqueda" placeholder="ID de ticket" value="@Context.Request.Query["idBusqueda"]" />
+                        
+                        <select name="idEstado">
+                            <option value="">Estado del ticket</option>
+                            @if (Context.Request.Query["idEstado"] == "1")
+                            {
+                                <option value="1" selected>Nuevo</option>
+                            }
+                            else
+                            {
+                                <option value="1">Nuevo</option>
+                            }
+                            
+                            @if (Context.Request.Query["idEstado"] == "2")
+                            {
+                                <option value="2" selected>En progreso</option>
+                            }
+                            else
+                            {
+                                <option value="2">En progreso</option>
+                            }
+                            
+                            @if (Context.Request.Query["idEstado"] == "3")
+                            {
+                                <option value="3" selected>Cerrado</option>
+                            }
+                            else
+                            {
+                                <option value="3">Cerrado</option>
+                            }
+                        </select>
+                        
+                        <select name="idPrioridad" onchange="this.form.submit()">
+                            <option value="">Prioridad</option>
+                            @foreach (var prioridad in ViewBag.Prioridades ?? new List<dynamic>())
+                            {
+                                if (Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())
+                                {
+                                    <option value="@prioridad.IdPrioridad" selected>@prioridad.NombrePrioridad</option>
+                                }
+                                else
+                                {
+                                    <option value="@prioridad.IdPrioridad">@prioridad.NombrePrioridad</option>
+                                }
+                            }
+                        </select>
+                        
+                        <select name="idDepartamento" onchange="this.form.submit()">
+                            <option value="">Departamento</option>
+                            @foreach (var dep in ViewBag.Departamentos ?? new List<dynamic>())
+                            {
+                                if (Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())
+                                {
+                                    <option value="@dep.IdDepartamento" selected>@dep.Nombre</option>
+                                }
+                                else
+                                {
+                                    <option value="@dep.IdDepartamento">@dep.Nombre</option>
+                                }
+                            }
+                        </select>
+                        
+                        <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn">
+                            Limpiar filtros
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tickets-list">
+                @if (Model != null && Model.Any())
                 {
-                    <a href="@Url.Action("Detalle", "HomeControllerAdmin", new { id = ticket.IdTicket })" class="ticket-link" style="text-decoration: none; color: inherit;">
-                        <div class="ticket">
+                    @foreach (var ticket in Model)
+                    {
+                        <a href="@Url.Action("Detalle", "HomeControllerAdmin", new { id = ticket.IdTicket })" class="ticket-item">
                             <div class="ticket-header">
-                                <span><strong>Ticket ID:</strong> @ticket.IdTicket</span>
-                                <span>
-                                    <strong>Creado por:</strong> @ticket.Usuario?.Nombre @ticket.Usuario?.Apellido<br />
-                                    <small>Correo: @ticket.Usuario?.Correo</small><br />
-                                    <small>Teléfono: @ticket.Usuario?.Telefono</small>
-                                </span>
+                                <div class="ticket-id">Ticket #@ticket.IdTicket</div>
+                                <div class="ticket-creator">
+                                    <div class="creator-name">@ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</div>
+                                    <div class="creator-phone">Tel: @ticket.Usuario?.Telefono</div>
+                                </div>
                             </div>
-                            <div class="ticket-description">@ticket.Titulo</div>
+                            <div class="ticket-title">@ticket.Titulo</div>
                             <div class="ticket-meta">
-                                <span>Fecha de creación: @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
-                                <span>Prioridad: @ticket.Prioridad?.NombrePrioridad</span>
-                                <span>Asignado a: @ticket.SoporteAsignado?.Nombre @ticket.SoporteAsignado?.Apellido</span>
-                                
-                                
+                                <div class="ticket-date">
+                                    <i>📅</i> @ticket.FechaCreacion.ToString("dd-MM-yyyy")
+                                </div>
+                                <div class="ticket-priority @(ticket.Prioridad?.NombrePrioridad?.ToLower() == "alta" ? "priority-high" : ticket.Prioridad?.NombrePrioridad?.ToLower() == "media" ? "priority-medium" : "priority-low")">
+                                    @ticket.Prioridad?.NombrePrioridad
+                                </div>
+                                <div class="ticket-assignee">
+                                    <i>👤</i> @(string.IsNullOrEmpty(ticket.SoporteAsignado?.Nombre) ? "Sin asignar" : $"{ticket.SoporteAsignado?.Nombre} {ticket.SoporteAsignado?.Apellido}")
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 30px; background-color: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <p>No hay tickets disponibles.</p>
+                    </div>
                 }
             </div>
         </div>
