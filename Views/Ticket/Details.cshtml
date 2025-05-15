@@ -11,218 +11,532 @@
     <meta charset="utf-8" />
     <title>Detalle del Ticket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-    <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo Gestper" />
-        <a href="/CRUD/Perfil">Perfil</a>
-        <a asp-controller="Ticket" asp-action="Create">Creacion de Ticket</a>
-        <a asp-controller="CRUD" asp-action="TicketsCreados">Lista de mis Tickets</a>
-    </div>
-
-    <div class="main">
-        <div class="card">
-            <div class="card-header">Detalle del Ticket</div>
-            <div class="card-body text-center">
-                <h3 class="mb-3">@Model.Titulo</h3>
-
-                <p>
-                    <span class="badge @ObtenerClaseEstado(Model.Estado?.NombreEstado)">
-                        @Model.Estado?.NombreEstado
-                    </span>
-                    <span class="badge @ObtenerClasePrioridad(Model.Prioridad?.NombrePrioridad)">
-                        Prioridad: @Model.Prioridad?.NombrePrioridad
-                    </span>
-                </p>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <h5>Descripción</h5>
-                        <p class="dato-perfil">@Model.Descripcion</p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <h5>Categoría</h5>
-                        <p class="dato-perfil">@Model.Categoria?.Nombre</p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <h5>Departamento</h5>
-                        <p class="dato-perfil">@Model.Departamento?.Nombre</p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <h5>Fecha de Creación</h5>
-                        <p class="dato-perfil">@Model.FechaCreacion.ToString("dd-MM-yyyy HH:mm")</p>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                <a asp-controller="CRUD" asp-action="TicketsCreados">Volver</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
-            background-color: #eef6ff;
+            background-color: #f8f9fa;
         }
 
         .sidebar {
             width: 250px;
-            background-color: #007BFF;
+            background: linear-gradient(to bottom, #0d6efd, #0a58ca);
             color: white;
             height: 100vh;
             padding-top: 20px;
             position: fixed;
-            text-align: center;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
         }
 
-        .sidebar img {
-            display: block;
-            margin: 0 auto 30px;
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .sidebar-logo img {
             max-width: 150px;
             height: auto;
         }
 
         .sidebar a {
-            display: block;
-            color: white;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
             padding: 12px 20px;
             text-decoration: none;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         .sidebar a:hover {
-            background-color: #0056b3;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .sidebar a.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-weight: 500;
         }
 
         .main {
             margin-left: 250px;
-            padding: 30px;
+            padding: 20px 30px;
             flex-grow: 1;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-title i {
+            margin-right: 10px;
+            color: #0d6efd;
         }
 
         .card {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 25px 40px;
-            max-width: 800px;
-            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: none;
+            overflow: hidden;
+            margin-bottom: 30px;
         }
 
         .card-header {
-            background-color: #007BFF;
-            color: white;
-            padding: 15px;
-            border-radius: 6px 6px 0 0;
-            font-size: 1.3rem;
-            font-weight: bold;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #212529;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .card-body h5 {
-            margin-bottom: 5px;
-            color: #007BFF;
+        .card-header i {
+            margin-right: 10px;
+            color: #0d6efd;
         }
 
-        .dato-perfil {
-            font-size: 18px;
-            font-weight: bold;
+        .card-body {
+            padding: 30px;
+        }
+
+        .ticket-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
         }
 
         .badge {
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.95em;
-            margin: 0 4px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .badge i {
+            margin-right: 5px;
         }
 
         .badge-abierto {
-            background-color: #17a2b8;
-            color: white;
+            background-color: #0dcaf0;
+            color: #fff;
         }
 
-        .badge-enproceso {
+        .badge-proceso {
             background-color: #ffc107;
-            color: white;
+            color: #212529;
         }
 
         .badge-resuelto {
-            background-color: #28a745;
-            color: white;
+            background-color: #198754;
+            color: #fff;
         }
 
         .badge-cerrado {
             background-color: #6c757d;
-            color: white;
-        }
-
-        .badge-alta {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .badge-media {
-            background-color: #fd7e14;
-            color: white;
+            color: #fff;
         }
 
         .badge-baja {
             background-color: #20c997;
-            color: white;
+            color: #fff;
         }
 
-        .btn-volver {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-decoration: none;
+        .badge-media {
+            background-color: #fd7e14;
+            color: #fff;
         }
 
-        .btn-volver:hover {
-            background-color: #5a6268;
+        .badge-alta {
+            background-color: #dc3545;
+            color: #fff;
         }
 
-        .row {
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .info-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 8px;
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .col-md-6 {
-            width: 48%;
+        .info-label i {
+            margin-right: 8px;
+            color: #0d6efd;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #212529;
+        }
+
+        .description-section {
+            margin-bottom: 30px;
+        }
+
+        .description-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .description-label i {
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        .description-content {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1rem;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5c636a;
+            border-color: #565e64;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #ffca2c;
+            border-color: #ffc720;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo img {
+                max-width: 40px;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .sidebar a {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .badge-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="~/images/logo.png" alt="Logo Gestper" />
+        </div>
+        
+        <a href="/CRUD/Perfil">
+            <i class="bi bi-person"></i>
+            <span>Perfil</span>
+        </a>
+        <a asp-controller="Ticket" asp-action="Create">
+            <i class="bi bi-ticket-perforated"></i>
+            <span>Creación de Ticket</span>
+        </a>
+        <a asp-controller="CRUD" asp-action="TicketsCreados" class="active">
+            <i class="bi bi-list-ul"></i>
+            <span>Lista de mis Tickets</span>
+        </a>
+    </div>
 
-    @functions {
-        public string ObtenerClaseEstado(string estado)
-        {
-            return estado?.ToLower() switch
-            {
-                "abierto" => "badge badge-abierto",
-                "en proceso" => "badge badge-enproceso",
-                "resuelto" => "badge badge-resuelto",
-                "cerrado" => "badge badge-cerrado",
-                _ => "badge"
-            };
-        }
+    <div class="main">
+        <div class="navbar">
+            <h1 class="page-title">
+                <i class="bi bi-ticket-detailed"></i> Detalle del Ticket #@Model.IdTicket
+            </h1>
+        </div>
 
-        public string ObtenerClasePrioridad(string prioridad)
-        {
-            return prioridad?.ToLower() switch
-            {
-                "alta" => "badge badge-alta",
-                "media" => "badge badge-media",
-                "baja" => "badge badge-baja",
-                _ => "badge"
-            };
-        }
-    }
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <i class="bi bi-info-circle"></i> Información del Ticket
+                </div>
+                
+                <div>
+                    <span class="text-muted">Creado el: @(Model.FechaCreacion != default(DateTime) ? Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm") : DateTime.Now.ToString("dd/MM/yyyy HH:mm"))</span>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <h2 class="ticket-title">@Model.Titulo</h2>
+                
+                <div class="badge-container">
+                    @{
+                        string estadoBadgeClass = "badge-proceso";
+                        string estadoIconClass = "bi-hourglass-split";
+                        string estadoTexto = "En Proceso";
+                        
+                        if (Model.Estado != null)
+                        {
+                            // Verificar si Estado es un string o un objeto
+                            string estadoStr = Model.Estado.ToString();
+                            
+                            // Si es un objeto completo, verificar si contiene "Gestper.Models"
+                            if (estadoStr.Contains("Gestper.Models"))
+                            {
+                                estadoTexto = "En Proceso";
+                            }
+                            else if (Model.Estado.NombreEstado != null)
+                            {
+                                estadoTexto = Model.Estado.NombreEstado;
+                                
+                                switch (estadoTexto.ToLower())
+                                {
+                                    case "abierto":
+                                        estadoBadgeClass = "badge-abierto";
+                                        estadoIconClass = "bi-envelope-open";
+                                        break;
+                                    case "en proceso":
+                                        estadoBadgeClass = "badge-proceso";
+                                        estadoIconClass = "bi-hourglass-split";
+                                        break;
+                                    case "resuelto":
+                                        estadoBadgeClass = "badge-resuelto";
+                                        estadoIconClass = "bi-check-circle";
+                                        break;
+                                    case "cerrado":
+                                        estadoBadgeClass = "badge-cerrado";
+                                        estadoIconClass = "bi-x-circle";
+                                        break;
+                                    default:
+                                        estadoBadgeClass = "badge-proceso";
+                                        estadoIconClass = "bi-hourglass-split";
+                                        break;
+                                }
+                            }
+                        }
+                        
+                        string prioridadBadgeClass = "badge-media";
+                        string prioridadIconClass = "bi-dash-circle";
+                        string prioridadTexto = "Media";
+                        
+                        if (Model.Prioridad != null)
+                        {
+                            // Verificar si Prioridad es un string o un objeto
+                            string prioridadStr = Model.Prioridad.ToString();
+                            
+                            // Si es un objeto completo, verificar si contiene "Gestper.Models"
+                            if (prioridadStr.Contains("Gestper.Models"))
+                            {
+                                prioridadTexto = "Por asignar";
+                            }
+                            else if (Model.Prioridad.NombrePrioridad != null)
+                            {
+                                prioridadTexto = Model.Prioridad.NombrePrioridad;
+                                
+                                switch (prioridadTexto.ToLower())
+                                {
+                                    case "baja":
+                                        prioridadBadgeClass = "badge-baja";
+                                        prioridadIconClass = "bi-arrow-down-circle";
+                                        break;
+                                    case "media":
+                                        prioridadBadgeClass = "badge-media";
+                                        prioridadIconClass = "bi-dash-circle";
+                                        break;
+                                    case "alta":
+                                        prioridadBadgeClass = "badge-alta";
+                                        prioridadIconClass = "bi-arrow-up-circle";
+                                        break;
+                                    default:
+                                        prioridadBadgeClass = "badge-media";
+                                        prioridadIconClass = "bi-dash-circle";
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    <span class="badge @estadoBadgeClass">
+                        <i class="bi @estadoIconClass"></i> @estadoTexto
+                    </span>
+                    
+                    <span class="badge @prioridadBadgeClass">
+                        <i class="bi @prioridadIconClass"></i> Prioridad: @prioridadTexto
+                    </span>
+                </div>
+                
+                <div class="description-section">
+                    <div class="description-label">
+                        <i class="bi bi-card-text"></i> Descripción
+                    </div>
+                    <div class="description-content">
+                        @Model.Descripcion
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-tag"></i> Categoría
+                            </div>
+                            <div class="info-value">
+                                @(Model.Categoria?.Nombre ?? "No especificada")
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-building"></i> Departamento
+                            </div>
+                            <div class="info-value">
+                                @(Model.Departamento?.Nombre ?? "No especificado")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a asp-controller="Ticket" asp-action="Edit" asp-route-id="@Model.IdTicket" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Editar Ticket
+                    </a>
+                    <a asp-controller="CRUD" asp-action="TicketsCreados" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver a la Lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

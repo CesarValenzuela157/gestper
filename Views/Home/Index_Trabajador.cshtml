@@ -14,218 +14,311 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            background-color: #f0f8ff;
             height: 100vh;
-        }
-
-        .top-bar {
-            background-color: #3e5da7;
-            height: 50px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-around;
-            background-color: #e0e0e0;
-            padding: 15px;
-            font-weight: bold;
-            border-bottom: 4px solid #2f4eb7;
-        }
-
-        .ticket-summary {
-            text-align: center;
-        }
-
-        .ticket-summary strong {
-            font-size: 20px;
-            display: block;
-        }
-
-        .container {
-            display: flex;
-            height: calc(100vh - 100px);
-        }
-
-        .sidebar {
-            width: 220px;
-            background-color: #e0e0e0;
-            border-right: 4px solid #2f4eb7;
             display: flex;
             flex-direction: column;
         }
 
-        .sidebar-item {
-            padding: 12px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            border-bottom: 1px solid #ccc;
+        .page-container {
             display: flex;
-            justify-content: space-between;
+            flex-grow: 1;
+            height: 100vh;
         }
 
-        .sidebar-item.selected {
-            background-color: #d4d4d4;
+        /* Estilo para el contador de tickets */
+        .ticket-counter {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f0f8ff;
+            padding: 15px 0;
+            border-bottom: 1px solid #ccc;
+            position: relative; /* Para posicionar el botón de cerrar sesión */
+        }
+
+        .counter-item {
+            text-align: center;
+        }
+
+        .counter-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .counter-label {
+            font-size: 12px;
             font-weight: bold;
         }
 
-        .sidebar-item.logout {
-            font-weight: normal;
-            gap: 10px;
+        /* Estilo para el botón de cerrar sesión */
+        .logout-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background-color: #ff3333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #cc0000;
+        }
+
+        /* Estilo para la barra lateral */
+        .sidebar {
+            width: 250px;
+            background-color: #0078ff;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilos para los filtros en la barra lateral */
+        .sidebar-filters {
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .sidebar-filters input,
+        .sidebar-filters select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 15px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            background-color: white;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            box-sizing: border-box; /* Añadir esta línea para asegurar que el padding no afecte el ancho total */
+            height: 36px; /* Establecer una altura fija para todos los elementos */
+        }
+
+        /* Estilo específico para los selects */
+        .sidebar-filters select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .sidebar-filters a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .sidebar-filters a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para el botón de búsqueda */
+        .search-button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 20px;
+            border: none;
+            background-color: white;
+            color: #0078ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .main {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            background-color: #f0f8ff;
+            overflow: auto;
         }
 
-        .filters {
-            display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
+        .main-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .filters input,
-        .filters select {
-            padding: 6px 15px;
-            border-radius: 100px;
-            border: 1px solid #999;
-            width: 200px;
+        .main-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .tickets-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tickets-table th {
+            background-color: #f5f5f5;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tickets-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
         }
 
         .tickets {
-            padding: 20px;
+            padding: 0;
             overflow-y: auto;
             flex-grow: 1;
-        }
-
-        .ticket {
-            background-color: white;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .ticket-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-        }
-
-        .ticket-description {
-            margin-top: 5px;
-            color: #333;
-        }
-
-        .ticket-meta {
-            font-size: 13px;
-            margin-top: 8px;
-            display: flex;
-            justify-content: space-between;
-            color: #555;
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div><img src="/images/logo.png" style="height: 40px;"></div>
-        <div>@ViewBag.Correo</div>
-    </div>
-
-    <div class="status-bar">
-        <div class="ticket-summary">
-            <strong>@ViewBag.Total</strong>
-            TODOS LOS TICKETS
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.Nuevos</strong>
-            TICKETS NUEVOS
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.EnProgreso</strong>
-            EN PROGRESO
-        </div>
-        <div class="ticket-summary">
-            <strong>@ViewBag.Cerrados</strong>
-            CERRADOS
-        </div>
-    </div>
-
-    <div class="container">
-        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post" style="margin: 0;">
-            <button type="submit" class="sidebar-item logout" style="width: 100%; border: none; background: none; text-align: left;">
-                <span>⮐</span>
-                <span>Cerrar sesión</span>
-            </button>
-        </form>
-
-        <div class="main">
-            <form method="get" asp-controller="Trabajador" asp-action="Index">
-                <div class="filters">
-                    <input type="text" name="idBusqueda" placeholder="Ingrese una ID a buscar" value="@Context.Request.Query["idBusqueda"]" />
-
-                    <select name="idEstado">
-                        <option value="">Seleccione estado</option>
-                        @foreach (var estado in ViewBag.Estados)
-                        {
-                            <option value="@estado.IdEstado" selected="@(Context.Request.Query["idEstado"] == estado.IdEstado.ToString())">
-                                @estado.NombreEstado
-                            </option>
-                        }
-                    </select>
-
-                    <select name="idPrioridad" onchange="this.form.submit()">
-                        <option value="">Seleccione prioridad</option>
-                        @foreach (var prioridad in ViewBag.Prioridades)
-                        {
-                            <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
-                                @prioridad.NombrePrioridad
-                            </option>
-                        }
-                    </select>
-
-                    <select name="idDepartamento" onchange="this.form.submit()">
-                        <option value="">Departamento</option>
-                        @foreach (var dep in ViewBag.Departamentos)
-                        {
-                            <option value="@dep.IdDepartamento" selected="@(Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())">
-                                @dep.Nombre
-                            </option>
-                        }
-                    </select>
-
-                    <button type="submit" hidden>Buscar</button>
-                    <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn btn-outline-secondary" style="border-radius: 100px; padding: 6px 20px;">
-                        Limpiar filtros
-                    </a>
-                </div>
+    <div class="page-container">
+        
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="/images/logo.png" alt="Gestper Logo">
+            </div>
+            
+            <!-- Filtros en la barra lateral -->
+            <form method="get" asp-controller="Trabajador" asp-action="Index" class="sidebar-filters">
+                <input type="text" name="idBusqueda" placeholder="Ingrese una ID a buscar" value="@Context.Request.Query["idBusqueda"]" />
+                
+                <select name="idEstado">
+                    <option value="">Seleccione estado</option>
+                    @foreach (var estado in ViewBag.Estados)
+                    {
+                        <option value="@estado.IdEstado" selected="@(Context.Request.Query["idEstado"] == estado.IdEstado.ToString())">
+                            @estado.NombreEstado
+                        </option>
+                    }
+                </select>
+                
+                <select name="idPrioridad">
+                    <option value="">Seleccione prioridad</option>
+                    @foreach (var prioridad in ViewBag.Prioridades)
+                    {
+                        <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
+                            @prioridad.NombrePrioridad
+                        </option>
+                    }
+                </select>
+                
+                <select name="idDepartamento">
+                    <option value="">Departamento</option>
+                    @foreach (var dep in ViewBag.Departamentos)
+                    {
+                        <option value="@dep.IdDepartamento" selected="@(Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())">
+                            @dep.Nombre
+                        </option>
+                    }
+                </select>
+                
+                <button type="submit" class="search-button">Buscar</button>
+                <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())">Limpiar filtros</a>
             </form>
+        </div>
 
-            <div class="tickets">
-                @foreach (var ticket in Model)
-                {
-                    <a href="@Url.Action("Detalle", "Trabajador", new { id = ticket.IdTicket })" class="ticket-link" style="text-decoration: none; color: inherit;">
-                        <div class="ticket">
-                            <div class="ticket-header">
-                                <span><strong>Ticket ID:</strong> @ticket.IdTicket</span>
-                                <span><strong>Creado por:</strong> @ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</span>
-                            </div>
-                            <div class="ticket-description">@ticket.Titulo</div>
-                            <div class="ticket-meta">
-                                <span>Fecha de creación: @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
-                                <span>Prioridad: @ticket.Prioridad?.NombrePrioridad</span>
-                            </div>
-                        </div>
-                    </a>
-                }
+        <div class="main-container">
+            <!-- Contador de tickets ahora con el mismo color de fondo que la página -->
+            <div class="ticket-counter">
+                <div class="counter-item">
+                    <div class="counter-number">@ViewBag.Total</div>
+                    <div class="counter-label">TODOS LOS TICKETS</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number">@ViewBag.Nuevos</div>
+                    <div class="counter-label">TICKETS NUEVOS</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number">@ViewBag.EnProgreso</div>
+                    <div class="counter-label">EN PROGRESO</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number">@ViewBag.Cerrados</div>
+                    <div class="counter-label">CERRADOS</div>
+                </div>
+                
+                <!-- Botón de cerrar sesión ahora en la esquina superior derecha -->
+                <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+                    <button type="submit" class="logout-button">Cerrar sesión</button>
+                </form>
+            </div>
+
+            <div class="main">
+                <div class="main-header">
+                    <div class="main-title">Listado de Tickets</div>
+                </div>
+
+                <div class="tickets">
+                    <table class="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Descripción</th>
+                                <th>Fecha de Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model)
+                            {
+                                <tr>
+                                    <td>@ticket.Titulo</td>
+                                    <td>@(ticket.Descripcion?.Length > 100 ? ticket.Descripcion.Substring(0, 100) + "..." : ticket.Descripcion)</td>
+                                    <td>@ticket.FechaCreacion.ToString("dd-MM-yyyy")</td>
+                                    <td>
+                                        <a href="@Url.Action("Detalle", "Trabajador", new { id = ticket.IdTicket })">Ver detalles</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -11,157 +11,368 @@
     <meta charset="utf-8" />
     <title>Crear Ticket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-    <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo Gestper" />
-        <a href="/CRUD/Perfil">Perfil</a>
-        <a asp-controller="Ticket" asp-action="Create">Creacion de Ticket</a>
-        <a asp-controller="CRUD" asp-action="TicketsCreados">Lista de mis Tickets</a>
-    </div>
-
-    <div class="main">
-        <div class="titulo-barra">
-            <h2>Crear Ticket</h2>
-        </div>
-
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <textarea asp-for="Descripcion" class="form-control"></textarea>
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdCategoria" class="control-label">Categoría</label>
-                <select asp-for="IdCategoria" class="form-control" asp-items="ViewBag.Categorias"></select>
-                <span asp-validation-for="IdCategoria" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdDepartamento" class="control-label">Departamento</label>
-                <select asp-for="IdDepartamento" class="form-control" asp-items="ViewBag.Departamentos"></select>
-                <span asp-validation-for="IdDepartamento" class="text-danger"></span>
-            </div>
-
-            <div class="form-buttons">
-                <button type="submit" class="btn btn-guardar">Guardar</button>
-                <a asp-action="Index" class="btn btn-cancelar">Cancelar</a>
-            </div>
-        </form>
-    </div>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            background-color: #eef6ff;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            background-color: #f8f9fa;
         }
 
         .sidebar {
             width: 250px;
-            background-color: #007BFF;
+            background: linear-gradient(to bottom, #0d6efd, #0a58ca);
             color: white;
             height: 100vh;
             padding-top: 20px;
             position: fixed;
-            text-align: center;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
         }
 
-        .sidebar img {
-            display: block;
-            margin: 0 auto 30px;
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .sidebar-logo img {
             max-width: 150px;
             height: auto;
         }
 
         .sidebar a {
-            display: block;
-            color: white;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
             padding: 12px 20px;
             text-decoration: none;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         .sidebar a:hover {
-            background-color: #0056b3;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
         }
 
         .sidebar a.active {
-            background-color: #0056b3;
-            font-weight: bold;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-weight: 500;
         }
 
         .main {
-            margin-left: 260px;
-            padding: 30px 40px;
+            margin-left: 250px;
+            padding: 20px 30px;
+            flex-grow: 1;
+            min-height: 100vh;
+            transition: all 0.3s;
         }
 
-        .titulo-barra {
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
         }
 
-        .titulo-barra h2 {
-            font-size: 32px;
-            font-weight: bold;
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #212529;
             margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-title i {
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: none;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #212529;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        .card-body {
+            padding: 30px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+            background-color: #fff;
+        }
+
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+        .text-danger {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
         }
 
         .form-buttons {
+            display: flex;
+            gap: 15px;
             margin-top: 30px;
         }
 
         .btn {
             padding: 12px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-right: 10px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
             color: white;
-            cursor: pointer;
         }
 
-        .btn-guardar {
-            background-color: #28a745;
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
         }
 
-        .btn-cancelar {
+        .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #157347;
+            border-color: #146c43;
+        }
+
+        .btn-secondary {
             background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
         }
 
-        .text-danger {
+        .btn-secondary:hover {
+            background-color: #5c636a;
+            border-color: #565e64;
+        }
+
+        .required-indicator {
             color: #dc3545;
-            font-size: 14px;
+            margin-left: 3px;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo img {
+                max-width: 40px;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .sidebar a {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="~/images/logo.png" alt="Logo Gestper" />
+        </div>
+        
+        <a href="/CRUD/Perfil">
+            <i class="bi bi-person"></i>
+            <span>Perfil</span>
+        </a>
+        <a asp-controller="Ticket" asp-action="Create" class="active">
+            <i class="bi bi-ticket-perforated"></i>
+            <span>Creación de Ticket</span>
+        </a>
+        <a asp-controller="CRUD" asp-action="TicketsCreados">
+            <i class="bi bi-list-ul"></i>
+            <span>Lista de mis Tickets</span>
+        </a>
+    </div>
 
-    
+    <div class="main">
+        <div class="navbar">
+            <h1 class="page-title">
+                <i class="bi bi-ticket-perforated-fill"></i> Crear Nuevo Ticket
+            </h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-pencil-square"></i> Formulario de Ticket
+            </div>
+            
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Titulo" class="form-label">
+                            Título <span class="required-indicator">*</span>
+                        </label>
+                        <input asp-for="Titulo" class="form-control" placeholder="Ingrese un título descriptivo" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Descripcion" class="form-label">
+                            Descripción <span class="required-indicator">*</span>
+                        </label>
+                        <textarea asp-for="Descripcion" class="form-control" placeholder="Describa detalladamente el problema o solicitud"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="IdCategoria" class="form-label">
+                                    Categoría <span class="required-indicator">*</span>
+                                </label>
+                                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.Categorias">
+                                    <option value="">-- Seleccione una categoría --</option>
+                                </select>
+                                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="IdDepartamento" class="form-label">
+                                    Departamento <span class="required-indicator">*</span>
+                                </label>
+                                <select asp-for="IdDepartamento" class="form-select" asp-items="ViewBag.Departamentos">
+                                    <option value="">-- Seleccione un departamento --</option>
+                                </select>
+                                <span asp-validation-for="IdDepartamento" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Guardar Ticket
+                        </button>
+                        <a asp-controller="CRUD" asp-action="TicketsCreados" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>
