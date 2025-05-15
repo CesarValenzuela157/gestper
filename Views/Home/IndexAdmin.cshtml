@@ -136,7 +136,7 @@
 </head>
 <body>
     <div class="top-bar">
-        <div><img src="/images/logo.png" style="height: 40px;"></div>
+        <div><img src="/images/logo.png" style="height: 120px;"></div>
         <div>@correo</div>
     </div>
 
@@ -160,10 +160,17 @@
     </div>
 
     <div class="container">
-        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post" style="margin: 0;">
-            <button type="submit" class="sidebar-item logout" style="width: 100%; border: none; background: none; text-align: left;">
-                <span>⮐</span>
-                <span>Cerrar sesión</span>
+        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post" style="padding: 16px; border-right: 4px solid #2f4eb7">
+            <button type="submit" style="
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-weight: bold;
+                cursor: pointer;
+            ">
+                Cerrar sesión
             </button>
         </form>
 
