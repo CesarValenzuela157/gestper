@@ -209,7 +209,7 @@ namespace Gestper.Controllers
             {
                 ticket.FechaCreacion = DateTime.Now;
                 ticket.IdEstado = 1; // Estado "Abierto"
-                ticket.IdPrioridad = 2; // Media (asignado automáticamente)
+                ticket.IdPrioridad = 4; // Por asignar  (asignado automáticamente)
 
                 var correo = HttpContext.Session.GetString("UsuarioCorreo");
                 var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == correo);
