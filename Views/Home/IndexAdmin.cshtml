@@ -210,13 +210,19 @@
                         <div class="ticket">
                             <div class="ticket-header">
                                 <span><strong>Ticket ID:</strong> @ticket.IdTicket</span>
-                                <span><strong>Creado por:</strong> @ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</span>
+                                <span>
+                                    <strong>Creado por:</strong> @ticket.Usuario?.Nombre @ticket.Usuario?.Apellido<br />
+                                    <small>Correo: @ticket.Usuario?.Correo</small><br />
+                                    <small>Teléfono: @ticket.Usuario?.Telefono</small>
+                                </span>
                             </div>
                             <div class="ticket-description">@ticket.Titulo</div>
                             <div class="ticket-meta">
                                 <span>Fecha de creación: @ticket.FechaCreacion.ToString("dd-MM-yyyy")</span>
                                 <span>Prioridad: @ticket.Prioridad?.NombrePrioridad</span>
                                 <span>Asignado a: @ticket.SoporteAsignado?.Nombre @ticket.SoporteAsignado?.Apellido</span>
+                                
+                                
                             </div>
                         </div>
                     </a>
