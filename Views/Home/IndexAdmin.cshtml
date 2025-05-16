@@ -295,15 +295,12 @@
             color: #666;
         }
 
-        .creator-name {
+        .creator-info{
+            font-size: 14px;
             font-weight: 500;
             color: #333;
-        }
-
-        .creator-phone {
-            font-size: 12px;
-            color: #666;
-            margin-top: 2px;
+            text-align: right;
+            line-height: 1.6;
         }
 
         .ticket-title {
@@ -495,9 +492,9 @@
                             <div class="ticket-header">
                                 <div class="ticket-id">Ticket #@ticket.IdTicket</div>
                                 <div class="ticket-creator">
-                                    <div class="creator-name">@ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</div>
-                                    <div class="creator-phone">Tel: @ticket.Usuario?.Telefono</div>
-                                    <div class="creator-email">Email: @ticket.Usuario?.Correo</div>
+                                    <div class="creator-info">@ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</div>
+                                    <div class="creator-info">Tel: @ticket.Usuario?.Telefono</div>
+                                    <div class="creator-info">Email: @ticket.Usuario?.Correo</div>
                                 </div>
                             </div>
                             <div class="ticket-title">@ticket.Titulo</div>
