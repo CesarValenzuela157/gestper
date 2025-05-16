@@ -367,7 +367,7 @@
                 margin-right: 0;
                 font-size: 20px;
             }
-
+            
             .main {
                 margin-left: 70px;
             }
@@ -477,7 +477,6 @@
                                                 
                                                 if (ticket.Estado != null)
                                                 {
-                                                    // Verificar si Estado es un string o un objeto
                                                     string estadoStr = ticket.Estado.ToString();
                                                     
                                                     // Si es un objeto completo, verificar si contiene "Gestper.Models"
@@ -560,10 +559,7 @@
                         <i class="bi bi-ticket-perforated"></i>
                         <h4>No hay tickets disponibles</h4>
                         <p>No se encontraron tickets con los criterios de búsqueda actuales.</p>
-                        <a asp-controller="Ticket" asp-action="Create" class="btn btn-primary btn-icon">
-                            <i class="bi bi-plus-circle"></i> Crear nuevo Ticket
-                        </a>
-                    </div>
+                        </div>
                 }
             </div>
         </div>

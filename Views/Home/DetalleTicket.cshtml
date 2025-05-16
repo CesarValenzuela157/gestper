@@ -1,153 +1,304 @@
 @model Gestper.Models.Ticket
 
 @{
-    ViewData["Title"] = "Gestión del Ticket";
+    Layout = null; // Eliminamos el layout para eliminar la navbar
     string rol = Context.Session.GetString("UsuarioRol") ?? "";
     var trabajadores = ViewBag.Trabajadores as List<Gestper.Models.Usuario>;
     var asignado = trabajadores?.FirstOrDefault(t => t.IdUsuario == Model.IdSoporteAsignado);
     var controlador = Context.Session.GetString("UsuarioRol") == "1" ? "HomeControllerAdmin" : "Trabajador";
-
 }
 
-<style>
-    :root {
-        --primary-color: #4267B2;
-        --primary-light: rgba(66, 103, 178, 0.2);
-    }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión del Ticket</title>
+    
+    <!-- Incluir Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
 
-    .bg-primary-light {
-        background-color: rgba(66, 103, 178, 0.2); /* Azul claro */
-    }
+        /* Estilos para el panel lateral */
+        .sidebar {
+            width: 250px;
+            background-color: #0074e8; /* Color azul del logo gestper */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Centrar verticalmente */
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
 
-    .text-primary-custom {
-        color: #4267B2; /* Azul */
-    }
+        .logo-container {
+            text-align: center;
+            padding: 0 15px;
+        }
 
-    .btn-primary-custom {
-        background-color: #4267B2; /* Azul */
-        color: white;
-    }
+        .logo {
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            object-fit: contain;
+        }
 
-    .btn-primary-custom:hover {
-        background-color: #365899;
-    }
+        /* Estilos para el contenido principal */
+        .content-wrapper {
+            flex: 1;
+            margin-left: 250px; /* Mismo ancho que el sidebar */
+            width: calc(100% - 250px);
+        }
 
-    .priority-dot {
-        height: 12px;
-        width: 12px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 8px;
-    }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            min-height: 100vh;
+        }
 
-    .dot-low { background-color: green; }
-    .dot-medium { background-color: orange; }
-    .dot-high { background-color: red; }
+        .card-container {
+            width: 100%;
+            max-width: 1400px; /* Contenedor más grande */
+        }
 
-    .ticket-arrow {
-        font-size: 32px; 
-        font-weight: bold;
-        color: #333;
-        display: inline-block;
-        position: relative;
-        top: -13px;
-    }
+        .card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+        }
 
-    .ticket-arrow::before {
-        content: '‹';
-    }
-</style>
+        .bg-primary-light {
+            background-color: #e6eeff;
+        }
 
-<div class="container-fluid p-4">
-    <div class="card shadow-sm">
-        <div class="row g-0">
-            <!-- Panel Izquierdo -->
-            <div class="col-md-2 p-3 border-end bg-primary-light">
-                @if (rol == "1")
-                {
-                    <a asp-controller="HomeControllerAdmin" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3">← Volver</a>
-                }
-                else if (rol == "2")
-                {
-                    <a asp-controller="Trabajador" asp-action="Index" class="ticket-arrow text-decoration-none mt-2 mb-3">← Volver</a>
-                }
+        .text-primary-custom {
+            color: #0074e8; /* Color azul exacto del logo */
+        }
 
-                <p class="mt-4"><strong>ID del ticket</strong><br />@Model.IdTicket</p>
-                <p><strong>Creado por</strong><br />@Model.Usuario?.Nombre @Model.Usuario?.Apellido</p>
-                <p><strong>Correo</strong><br />@Model.Usuario?.Nombre @Model.Usuario?.Correo</p>
-                <p><strong>Telefono</strong><br />@Model.Usuario?.Nombre @Model.Usuario?.Telefono</p>
-                <p><strong>Fecha de creación</strong><br />@Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
-            </div>
+        .btn-primary-custom {
+            background-color: #0074e8; /* Color azul exacto del logo */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px; /* Botón más grande */
+            font-size: 16px;
+        }
 
-            <!-- Panel Derecho -->
-            <div class="col-md-8 p-4"> 
-                <h5 class="mb-4 text-primary-custom">Gestionar ticket</h5>
-                
-                <form asp-action="Guardar" asp-controller="@controlador" method="post">
-                    <input type="hidden" name="IdTicket" value="@Model.IdTicket" />
+        .btn-primary-custom:hover {
+            background-color: #0062c4; /* Versión más oscura para hover */
+        }
 
-                    <div class="mb-3">
-                        <label class="form-label">Título</label>
-                        <input type="text" class="form-control" name="Titulo" value="@Model.Titulo" />
-                    </div>
+        .form-control, .form-select {
+            border-radius: 4px;
+            padding: 10px 12px; /* Campos más grandes */
+            border: 1px solid #ced4da;
+            font-size: 16px;
+        }
 
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <textarea class="form-control" name="Descripcion" rows="2">@Model.Descripcion</textarea>
-                    </div>
-                    
+        .form-label {
+            font-weight: normal;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
 
-                    @if (rol == "2")
-                    {
-                        <div class="mb-3 d-none">
-                            <label class="form-label">Asignado a</label>
-                            <input type="text" class="form-control" value="@($"{asignado?.Nombre} {asignado?.Apellido}")" readonly />
-                            <input type="hidden" name="IdSoporteAsignado" value="@Model.IdSoporteAsignado" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="mb-3">
-                            <label class="form-label">Asignado a</label>
-                            <select class="form-control" name="IdSoporteAsignado">
-                                <option value="">Sin asignar</option>
-                                @foreach (var trabajador in (List<Gestper.Models.Usuario>)ViewBag.Trabajadores)
+        .ticket-arrow {
+            font-size: 22px; /* Flecha más grande */
+            color: #333;
+            margin-right: 5px;
+        }
+
+        .volver-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+
+        .info-value {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .ticket-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ticket-icon {
+            font-size: 24px;
+            color: #0074e8;
+        }
+
+        /* Responsive para el sidebar */
+        @@media (max-width: 991px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .logo {
+                width: 50px;
+            }
+            
+            .content-wrapper {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+        }
+
+        /* Aumentar el tamaño de los elementos en pantallas grandes */
+        @@media (min-width: 1200px) {
+            .card-container {
+                max-width: 80%; /* Usar porcentaje para adaptarse mejor */
+            }
+            
+            .form-control, .form-select {
+                padding: 12px 15px;
+            }
+            
+            h5.text-primary-custom {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Panel lateral -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="/Images/logo.png" alt="Gestper Logo" class="logo">
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="content-wrapper">
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <div class="card-container">
+                <div class="card">
+                    <div class="row g-0">
+                        <!-- Panel Izquierdo -->
+                        <div class="col-md-3 p-4 bg-primary-light">
+                            <div class="mb-4">
+                                @if (rol == "1")
                                 {
-                                    var seleccionado = Model.IdSoporteAsignado == trabajador.IdUsuario ? "selected" : "";
-                                    @:<option value="@trabajador.IdUsuario" @seleccionado>@trabajador.Nombre @trabajador.Apellido</option>
+                                    <a asp-controller="HomeControllerAdmin" asp-action="Index" class="volver-link">
+                                        <span class="ticket-arrow">←</span> Volver
+                                    </a>
                                 }
-                            </select>
+                                else if (rol == "2")
+                                {
+                                    <a asp-controller="Trabajador" asp-action="Index" class="volver-link">
+                                        <span class="ticket-arrow">←</span> Volver
+                                    </a>
+                                }
+                                else
+                                {
+                                    <!-- Fallback para otros roles o si no hay rol definido -->
+                                    <a href="javascript:history.back()" class="volver-link">
+                                        <span class="ticket-arrow">←</span> Volver
+                                    </a>
+                                }
+                            </div>
+
+                            <div class="mt-4">
+                                <p class="info-label">ID del ticket</p>
+                                <p class="info-value">@Model.IdTicket</p>
+                                
+                                <p class="info-label">Creado por</p>
+                                <p class="info-value">@Model.Usuario?.Nombre @Model.Usuario?.Apellido</p>
+                                
+                                <p class="info-label">Correo</p>
+                                <p class="info-value">@Model.Usuario?.Correo</p>
+                                
+                                <p class="info-label">Telefono</p>
+                                <p class="info-value">@Model.Usuario?.Telefono</p>
+                                
+                                <p class="info-label">Fecha de creación</p>
+                                <p class="info-value">@Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                            </div>
                         </div>
-                    }
 
-                    <div class="mb-4"> 
-                        <label class="form-label">Prioridad</label>
-                        <select class="form-select" name="IdPrioridad">
-                            <option disabled>Seleccione prioridad</option>
-                            <option value="3" selected="@(Model.IdPrioridad == 3)">Baja</option>
-                            <option value="2" selected="@(Model.IdPrioridad == 2)">Media</option>
-                            <option value="1" selected="@(Model.IdPrioridad == 1)">Alta</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="form-label">Estado</label>
-                        <select class="form-select" name="IdEstado">
-                            <option disabled>Seleccione estado</option>
-                            @foreach (var estado in ViewBag.Estados)
-                            {
-                                <option value="@estado.IdEstado" selected="@(Model.IdEstado == estado.IdEstado)">
-                                    @estado.NombreEstado
-                                </option>
-                            }
-                        </select>
-                    </div>
+                        <!-- Panel Derecho -->
+                        <div class="col-md-9 p-5"> <!-- Aumentado el padding para más espacio -->
+                            <div class="ticket-title mb-4">
+                                <i class="fas fa-ticket-alt ticket-icon"></i>
+                                <h5 class="text-primary-custom mb-0">Gestionar ticket</h5>
+                            </div>
+                            
+                            <form asp-action="Guardar" asp-controller="@controlador" method="post">
+                                <input type="hidden" name="IdTicket" value="@Model.IdTicket" />
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary-custom">Guardar</button>
+                                <div class="mb-4">
+                                    <label class="form-label">Título</label>
+                                    <input type="text" class="form-control" name="Titulo" value="@Model.Titulo" />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Descripción</label>
+                                    <textarea class="form-control" name="Descripcion" rows="4">@Model.Descripcion</textarea>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Prioridad</label>
+                                    <select class="form-select" name="IdPrioridad">
+                                        <option value="3" selected="@(Model.IdPrioridad == 3)">Baja</option>
+                                        <option value="2" selected="@(Model.IdPrioridad == 2)">Media</option>
+                                        <option value="1" selected="@(Model.IdPrioridad == 1)">Alta</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-5">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select" name="IdEstado">
+                                        @foreach (var estado in ViewBag.Estados)
+                                        {
+                                            <option value="@estado.IdEstado" selected="@(Model.IdEstado == estado.IdEstado)">
+                                                @estado.NombreEstado
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary-custom">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Incluir Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
