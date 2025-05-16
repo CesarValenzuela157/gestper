@@ -71,7 +71,7 @@ namespace Gestper.Controllers
                 return NotFound();
             
             var trabajadores = await _context.Usuarios
-                .Where(u => u.IdRol == 2)
+                .Where(u => u.IdRol == 2 && u.IdDepartamento == ticket.IdDepartamento)
                 .ToListAsync();
 
             ViewBag.Trabajadores = trabajadores;

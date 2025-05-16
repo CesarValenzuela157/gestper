@@ -91,6 +91,12 @@ namespace Gestper.Controllers
 
             if (ticket == null)
                 return NotFound();
+            
+            var trabajadores = await _context.Usuarios
+                .Where(u => u.IdRol == 2 && u.IdDepartamento == ticket.IdDepartamento)
+                .ToListAsync();
+
+            ViewBag.Trabajadores = trabajadores;
 
             ViewBag.Estados = new SelectList(await _context.Estados.ToListAsync(), "IdEstado", "NombreEstado", ticket.IdEstado);
             ViewBag.Categorias = new SelectList(await _context.Categorias.ToListAsync(), "IdCategoria", "Nombre", ticket.IdCategoria);

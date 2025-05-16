@@ -50,7 +50,13 @@ namespace Gestper.Controllers
             ViewBag.Departamentos = await _context.Departamentos.ToListAsync();
             ViewBag.Estados = await _context.Estados.ToListAsync();
             ViewBag.Prioridades = await _context.Prioridades.ToListAsync();
+            
+            var usuario = await _context.Usuarios
+                .Include(u => u.Departamento)
+                .FirstOrDefaultAsync(u => u.IdUsuario == idUsuario);
 
+            ViewBag.DepartamentoNombre = usuario?.Departamento?.Nombre ?? "Sin departamento";
+            
             return View("~/Views/Home/Index_Trabajador.cshtml", tickets);
 
         }

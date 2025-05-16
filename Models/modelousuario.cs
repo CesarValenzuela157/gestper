@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gestper.Models;
 
@@ -20,5 +21,9 @@ public class Usuario
     public int IdRol { get; set; }  // Este será 3 por defecto al registrar
 
     public bool Activo { get; set; }
+    
+    public int? IdDepartamento { get; set; }
+    [ForeignKey("IdDepartamento")]
+    public Departamento? Departamento { get; set; }
     
 }

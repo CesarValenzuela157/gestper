@@ -220,8 +220,11 @@
     <div class="page-container">
         
         <div class="sidebar">
-            <div class="sidebar-logo">
-                <img src="/images/logo.png" alt="Gestper Logo">
+            <div class="sidebar-logo" style="display: flex; flex-direction: column; align-items: center;">
+                <img src="/images/logo.png" alt="Gestper Logo" style="width: 120px; height: auto;">
+                <div style="margin-top: 10px; font-size: 14px; font-weight: bold; color: white;">
+                    Departamento: @ViewBag.DepartamentoNombre
+                </div>
             </div>
             
             <!-- Filtros en la barra lateral -->
@@ -248,15 +251,6 @@
                     }
                 </select>
                 
-                <select name="idDepartamento">
-                    <option value="">Departamento</option>
-                    @foreach (var dep in ViewBag.Departamentos)
-                    {
-                        <option value="@dep.IdDepartamento" selected="@(Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())">
-                            @dep.Nombre
-                        </option>
-                    }
-                </select>
                 
                 <button type="submit" class="search-button">Buscar</button>
                 <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())">Limpiar filtros</a>
