@@ -14,7 +14,7 @@ namespace Gestper.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? idDepartamento, int? idEstado, int? idPrioridad, int? idBusqueda)
+        public async Task<IActionResult> Index(int? idDepartamento, int? idEstado, int? idPrioridad, int? idBusqueda, DateTime? fechaFiltro)
         {
             if (HttpContext.Session.GetString("UsuarioRol") != "1")
                 return RedirectToAction("Login", "Usuario");
@@ -37,6 +37,9 @@ namespace Gestper.Controllers
             if (idBusqueda.HasValue)
                 ticketsQuery = ticketsQuery.Where(t => t.IdTicket == idBusqueda);
 
+            if (fechaFiltro.HasValue)
+                ticketsQuery = ticketsQuery.Where(t => t.FechaCreacion.Date == fechaFiltro.Value.Date);
+
             var tickets = await ticketsQuery
                 .OrderByDescending(t => t.FechaCreacion)
                 .ToListAsync();
@@ -51,7 +54,7 @@ namespace Gestper.Controllers
 
             return View("~/Views/Home/IndexAdmin.cshtml", tickets);
         }
-        
+
         [HttpPost]
         public IActionResult CerrarSesion()
         {
@@ -69,7 +72,7 @@ namespace Gestper.Controllers
 
             if (ticket == null)
                 return NotFound();
-            
+
             var trabajadores = await _context.Usuarios
                 .Where(u => u.IdRol == 2 && u.IdDepartamento == ticket.IdDepartamento)
                 .ToListAsync();
@@ -79,7 +82,7 @@ namespace Gestper.Controllers
 
             return View("~/Views/Home/DetalleTicket.cshtml", ticket);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Guardar(Ticket ticket)
         {

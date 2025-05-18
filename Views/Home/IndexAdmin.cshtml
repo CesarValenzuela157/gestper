@@ -24,8 +24,12 @@
             color: #333;
         }
 
+        input[type="date"] {
+            font-family: 'Roboto', sans-serif;
+        }
+
         .top-bar {
-            background-color: #3e5da7; /* Mantenemos el azul original */
+            background-color: #0074e8;
             height: 60px;
             color: white;
             display: flex;
@@ -54,11 +58,6 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
 
-        .logout-btn i {
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
         .container {
             display: flex;
             height: calc(100vh - 60px);
@@ -85,18 +84,15 @@
             border-radius: 50%;
             margin: 0 auto 10px;
             background-color: #f0f0f0;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
             font-size: 30px;
+            color: #999;
         }
 
         .user-name {
             font-weight: 500;
-            color: #333;
-            margin-bottom: 5px;
             font-size: 16px;
         }
 
@@ -139,17 +135,12 @@
 
         .menu-item i {
             margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            font-size: 18px;
         }
 
         .main {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #f5f5f5;
             padding: 20px;
+            background-color: #f5f5f5;
         }
 
         .breadcrumb {
@@ -165,15 +156,10 @@
             text-decoration: none;
         }
 
-        .breadcrumb span {
-            margin: 0 8px;
-        }
-
         .page-title {
             font-size: 24px;
             font-weight: 500;
             margin-bottom: 20px;
-            color: #333;
         }
 
         .stats-container {
@@ -191,27 +177,14 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .stat-card.all {
-            background-color: #f0f4f8;
-        }
-
-        .stat-card.new {
-            background-color: #e8f4fd;
-        }
-
-        .stat-card.progress {
-            background-color: #fff8e6;
-        }
-
-        .stat-card.closed {
-            background-color: #f0f8f0;
-        }
+        .stat-card.all { background-color: #f0f4f8; }
+        .stat-card.new { background-color: #e8f4fd; }
+        .stat-card.progress { background-color: #fff8e6; }
+        .stat-card.closed { background-color: #f0f8f0; }
 
         .stat-number {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 5px;
-            color: #333;
         }
 
         .stat-label {
@@ -232,7 +205,6 @@
             font-size: 16px;
             font-weight: 500;
             margin-bottom: 15px;
-            color: #333;
         }
 
         .filters {
@@ -273,8 +245,6 @@
             border-radius: 4px;
             padding: 15px 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
             text-decoration: none;
             color: inherit;
         }
@@ -290,24 +260,17 @@
             color: #3e5da7;
         }
 
-        .ticket-creator {
-            text-align: right;
-            color: #666;
-        }
-
-        .creator-info{
+        .creator-info {
             font-size: 14px;
             font-weight: 500;
             color: #333;
             text-align: right;
-            line-height: 1.6;
         }
 
         .ticket-title {
             font-size: 16px;
             font-weight: 500;
             margin-bottom: 10px;
-            color: #333;
         }
 
         .ticket-meta {
@@ -317,209 +280,146 @@
             color: #666;
         }
 
-        .ticket-date {
-            display: flex;
-            align-items: center;
-        }
-
-        .ticket-date i {
-            margin-right: 5px;
-        }
-
-        .ticket-priority {
-            display: flex;
-            align-items: center;
-        }
-
-        .priority-high {
-            color: #f44336;
-        }
-
-        .priority-medium {
-            color: #ff9800;
-        }
-
-        .priority-low {
-            color: #4caf50;
-        }
-
-        .ticket-assignee {
-            display: flex;
-            align-items: center;
-        }
-
+        .ticket-date i,
         .ticket-assignee i {
             margin-right: 5px;
         }
+
+        .priority-high { color: #f44336; }
+        .priority-medium { color: #ff9800; }
+        .priority-low { color: #4caf50; }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div>GESTPER</div>
-        <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
-            <button type="submit" class="logout-btn">
-                <i>⮐</i> Cerrar sesión
-            </button>
-        </form>
+
+<div class="top-bar">
+    <div>
+        <img src="/images/logo.png" alt="Logo Gestper" style="height: 140px;" />
+    </div>      
+    
+    <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+        <button type="submit" class="logout-btn">
+            ⮐ Cerrar sesión
+        </button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="user-profile">
+            <div class="avatar">@inicial</div>
+            <div class="user-name">@nombreCompleto</div>
+            <div class="user-email">@correo</div>
+        </div>
+        <div class="menu-title">MENÚ</div>
+        <div class="menu">
+            <a href="#" class="menu-item active">
+                🎫 <span>Tickets</span>
+            </a>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <div class="user-profile">
-                <div class="avatar">
-                    <span>@inicial</span>
-                </div>
-                <div class="user-name">@nombreCompleto</div>
-                <div class="user-email">@correo</div>
+    <div class="main">
+        <div class="breadcrumb">
+            <a href="#">Inicio</a><span>/</span><span>Panel de Tickets</span>
+        </div>
+
+        <h1 class="page-title">Panel de Tickets</h1>
+
+        <div class="stats-container">
+            <div class="stat-card all">
+                <div class="stat-number">@ViewBag.Total</div>
+                <div class="stat-label">Todos los tickets</div>
             </div>
-            
-            <div class="menu-title">MENÚ</div>
-            <div class="menu">
-                <a href="#" class="menu-item active">
-                    <i>🎫</i>
-                    <span>Tickets</span>
-                </a>
+            <div class="stat-card new">
+                <div class="stat-number">@ViewBag.Nuevos</div>
+                <div class="stat-label">Tickets nuevos</div>
+            </div>
+            <div class="stat-card progress">
+                <div class="stat-number">@ViewBag.EnProgreso</div>
+                <div class="stat-label">En progreso</div>
+            </div>
+            <div class="stat-card closed">
+                <div class="stat-number">@ViewBag.Cerrados</div>
+                <div class="stat-label">Cerrados</div>
             </div>
         </div>
 
-        <div class="main">
-            <div class="breadcrumb">
-                <a href="#">Inicio</a>
-                <span>/</span>
-                <span>Panel de Tickets</span>
-            </div>
-            
-            <h1 class="page-title">Panel de Tickets</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card all">
-                    <div class="stat-number">@ViewBag.Total</div>
-                    <div class="stat-label">Todos los tickets</div>
+        <div class="filters-section">
+            <div class="filters-title">Filtros de búsqueda</div>
+            <form method="get" asp-controller="HomeControllerAdmin" asp-action="Index">
+                <div class="filters">
+                    <input type="text" name="idBusqueda" placeholder="ID de ticket" value="@Context.Request.Query["idBusqueda"]"/>
+
+                    <select name="idEstado">
+                        <option value="">Estado del ticket</option>
+                        <option value="1" selected="@(Context.Request.Query["idEstado"] == "1")">Nuevo</option>
+                        <option value="2" selected="@(Context.Request.Query["idEstado"] == "2")">En progreso</option>
+                        <option value="3" selected="@(Context.Request.Query["idEstado"] == "3")">Cerrado</option>
+                    </select>
+
+                    <select name="idPrioridad">
+                        <option value="">Prioridad</option>
+                        @foreach (var prioridad in ViewBag.Prioridades ?? new List<dynamic>())
+                        {
+                            <option value="@prioridad.IdPrioridad" selected="@(Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())">
+                                @prioridad.NombrePrioridad
+                            </option>
+                        }
+                    </select>
+
+                    <select name="idDepartamento">
+                        <option value="">Departamento</option>
+                        @foreach (var dep in ViewBag.Departamentos ?? new List<dynamic>())
+                        {
+                            <option value="@dep.IdDepartamento" selected="@(Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())">
+                                @dep.Nombre
+                            </option>
+                        }
+                    </select>
+
+                    <!-- Calendario agregado -->
+                    <input type="date" name="fechaFiltro" value="@Context.Request.Query["fechaFiltro"]"/>
+
+                    <button type="submit" class="btn">Buscar</button>
+                    <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn">Limpiar filtros</a>
                 </div>
-                <div class="stat-card new">
-                    <div class="stat-number">@ViewBag.Nuevos</div>
-                    <div class="stat-label">Tickets nuevos</div>
-                </div>
-                <div class="stat-card progress">
-                    <div class="stat-number">@ViewBag.EnProgreso</div>
-                    <div class="stat-label">En progreso</div>
-                </div>
-                <div class="stat-card closed">
-                    <div class="stat-number">@ViewBag.Cerrados</div>
-                    <div class="stat-label">Cerrados</div>
-                </div>
-            </div>
-            
-            <div class="filters-section">
-                <div class="filters-title">Filtros de búsqueda</div>
-                <form method="get" asp-controller="HomeControllerAdmin" asp-action="Index">
-                    <div class="filters">
-                        <input type="text" name="idBusqueda" placeholder="ID de ticket" value="@Context.Request.Query["idBusqueda"]" />
-                        
-                        <select name="idEstado">
-                            <option value="">Estado del ticket</option>
-                            @if (Context.Request.Query["idEstado"] == "1")
-                            {
-                                <option value="1" selected>Nuevo</option>
-                            }
-                            else
-                            {
-                                <option value="1">Nuevo</option>
-                            }
-                            
-                            @if (Context.Request.Query["idEstado"] == "2")
-                            {
-                                <option value="2" selected>En progreso</option>
-                            }
-                            else
-                            {
-                                <option value="2">En progreso</option>
-                            }
-                            
-                            @if (Context.Request.Query["idEstado"] == "3")
-                            {
-                                <option value="3" selected>Cerrado</option>
-                            }
-                            else
-                            {
-                                <option value="3">Cerrado</option>
-                            }
-                        </select>
-                        
-                        <select name="idPrioridad" onchange="this.form.submit()">
-                            <option value="">Prioridad</option>
-                            @foreach (var prioridad in ViewBag.Prioridades ?? new List<dynamic>())
-                            {
-                                if (Context.Request.Query["idPrioridad"] == prioridad.IdPrioridad.ToString())
-                                {
-                                    <option value="@prioridad.IdPrioridad" selected>@prioridad.NombrePrioridad</option>
-                                }
-                                else
-                                {
-                                    <option value="@prioridad.IdPrioridad">@prioridad.NombrePrioridad</option>
-                                }
-                            }
-                        </select>
-                        
-                        <select name="idDepartamento" onchange="this.form.submit()">
-                            <option value="">Departamento</option>
-                            @foreach (var dep in ViewBag.Departamentos ?? new List<dynamic>())
-                            {
-                                if (Context.Request.Query["idDepartamento"] == dep.IdDepartamento.ToString())
-                                {
-                                    <option value="@dep.IdDepartamento" selected>@dep.Nombre</option>
-                                }
-                                else
-                                {
-                                    <option value="@dep.IdDepartamento">@dep.Nombre</option>
-                                }
-                            }
-                        </select>
-                        
-                        <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())" class="btn">
-                            Limpiar filtros
-                        </a>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="tickets-list">
-                @if (Model != null && Model.Any())
+            </form>
+        </div>
+
+        <div class="tickets-list">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var ticket in Model)
                 {
-                    @foreach (var ticket in Model)
-                    {
-                        <a href="@Url.Action("Detalle", "HomeControllerAdmin", new { id = ticket.IdTicket })" class="ticket-item">
-                            <div class="ticket-header">
-                                <div class="ticket-id">Ticket #@ticket.IdTicket</div>
-                                <div class="ticket-creator">
-                                    <div class="creator-info">@ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</div>
-                                    <div class="creator-info">Tel: @ticket.Usuario?.Telefono</div>
-                                    <div class="creator-info">Email: @ticket.Usuario?.Correo</div>
-                                </div>
+                    <a href="@Url.Action("Detalle", "HomeControllerAdmin", new { id = ticket.IdTicket })" class="ticket-item">
+                        <div class="ticket-header">
+                            <div class="ticket-id">Ticket #@ticket.IdTicket</div>
+                            <div class="ticket-creator">
+                                <div class="creator-info">@ticket.Usuario?.Nombre @ticket.Usuario?.Apellido</div>
+                                <div class="creator-info">Tel: @ticket.Usuario?.Telefono</div>
+                                <div class="creator-info">Email: @ticket.Usuario?.Correo</div>
                             </div>
-                            <div class="ticket-title">@ticket.Titulo</div>
-                            <div class="ticket-meta">
-                                <div class="ticket-date">
-                                    <i>📅</i> @ticket.FechaCreacion.ToString("dd-MM-yyyy")
-                                </div>
-                                <div class="ticket-priority @(ticket.Prioridad?.NombrePrioridad?.ToLower() == "alta" ? "priority-high" : ticket.Prioridad?.NombrePrioridad?.ToLower() == "media" ? "priority-medium" : "priority-low")">
-                                    @ticket.Prioridad?.NombrePrioridad
-                                </div>
-                                <div class="ticket-assignee">
-                                    <i>👤</i> @(string.IsNullOrEmpty(ticket.SoporteAsignado?.Nombre) ? "Sin asignar" : $"{ticket.SoporteAsignado?.Nombre} {ticket.SoporteAsignado?.Apellido}")
-                                </div>
+                        </div>
+                        <div class="ticket-title">@ticket.Titulo</div>
+                        <div class="ticket-meta">
+                            <div class="ticket-date">📅 @ticket.FechaCreacion.ToString("dd-MM-yyyy")</div>
+                            <div class="ticket-priority @(ticket.Prioridad?.NombrePrioridad?.ToLower() == "alta" ? "priority-high" : ticket.Prioridad?.NombrePrioridad?.ToLower() == "media" ? "priority-medium" : "priority-low")">
+                                @ticket.Prioridad?.NombrePrioridad
                             </div>
-                        </a>
-                    }
+                            <div class="ticket-assignee">👤 @(string.IsNullOrEmpty(ticket.SoporteAsignado?.Nombre) ? "Sin asignar" : $"{ticket.SoporteAsignado?.Nombre} {ticket.SoporteAsignado?.Apellido}")</div>
+                        </div>
+                    </a>
                 }
-                else
-                {
-                    <div style="text-align: center; padding: 30px; background-color: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                        <p>No hay tickets disponibles.</p>
-                    </div>
-                }
-            </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 30px; background-color: white; border-radius: 4px;">
+                    <p>No hay tickets disponibles.</p>
+                </div>
+            }
         </div>
     </div>
+</div>
 </body>
 </html>

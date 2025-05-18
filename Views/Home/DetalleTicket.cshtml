@@ -119,20 +119,22 @@
             font-size: 16px;
         }
 
-        .ticket-arrow {
-            font-size: 22px; /* Flecha más grande */
-            color: #333;
-            margin-right: 5px;
-        }
-
         .volver-link {
             color: #333;
             text-decoration: none;
             font-weight: 600;
             font-size: 18px;
-            display: flex;
-            align-items: center;
+            display: inline-flex;
+            align-items: center; 
+            gap: 8px;
         }
+
+        .volver-icon {
+            font-size: 18px; 
+            color: #333;
+            line-height: 1;
+        }
+
 
         .info-label {
             font-weight: bold;
@@ -210,20 +212,23 @@
                                 @if (rol == "1")
                                 {
                                     <a asp-controller="HomeControllerAdmin" asp-action="Index" class="volver-link">
-                                        <span class="ticket-arrow">←</span> Volver
+                                        <i class="fas fa-chevron-left"></i>
+                                        <span>Volver</span>
                                     </a>
                                 }
                                 else if (rol == "2")
                                 {
                                     <a asp-controller="Trabajador" asp-action="Index" class="volver-link">
-                                        <span class="ticket-arrow">←</span> Volver
+                                        <i class="fas fa-chevron-left"></i>
+                                        <span>Volver</span>
                                     </a>
                                 }
                                 else
                                 {
                                     <!-- Fallback para otros roles o si no hay rol definido -->
                                     <a href="javascript:history.back()" class="volver-link">
-                                        <span class="ticket-arrow">←</span> Volver
+                                        <i class="fas fa-chevron-left"></i>
+                                        <span>Volver</span>
                                     </a>
                                 }
                             </div>
@@ -266,6 +271,30 @@
                                     <textarea class="form-control" name="Descripcion" rows="4">@Model.Descripcion</textarea>
                                 </div>
                                 
+                                @if (rol == "2")
+                                {
+                                    <div class="mb-3 d-none">
+                                        <label class="form-label">Asignado a</label>
+                                        <input type="text" class="form-control" value="@($"{asignado?.Nombre} {asignado?.Apellido}")" readonly />
+                                        <input type="hidden" name="IdSoporteAsignado" value="@Model.IdSoporteAsignado" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mb-4">
+                                        <label class="form-label">Asignado a</label>
+                                        <select class="form-select" name="IdSoporteAsignado">
+                                            <option value="">Sin asignar</option>
+                                            @foreach (var trabajador in trabajadores ?? new List<Gestper.Models.Usuario>())
+                                            {
+                                                <option value="@trabajador.IdUsuario" selected="@(Model.IdSoporteAsignado == trabajador.IdUsuario)">
+                                                    @trabajador.Nombre @trabajador.Apellido
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                }
+                                
                                 <div class="mb-4">
                                     <label class="form-label">Prioridad</label>
                                     <select class="form-select" name="IdPrioridad">
@@ -286,7 +315,7 @@
                                         }
                                     </select>
                                 </div>
-
+                                
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary-custom">Guardar</button>
                                 </div>
@@ -297,7 +326,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Incluir Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

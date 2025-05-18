@@ -341,7 +341,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: inline-block;
+            display: block;
+            margin-bottom: 0; 
         }
 
         @@media (max-width: 768px) {
@@ -439,10 +440,11 @@
                 <form method="get" class="filter-group">
                     <span class="filter-label">Filtrar por estado:</span>
                     <select name="estado" class="form-select" onchange="this.form.submit()">
-                        @foreach (var opcion in opciones)
+                        <option value="0" selected="@(ViewBag.EstadoFiltro == 0 ? "selected" : null)">Todos</option>
+                        @foreach (var estado in (SelectList)ViewBag.Estados)
                         {
-                            <option value="@opcion" selected="@(estado == opcion ? "selected" : null)">
-                                @opcion
+                            <option value="@estado.Value" selected="@(ViewBag.EstadoFiltro == int.Parse(estado.Value) ? "selected" : null)">
+                                @estado.Text
                             </option>
                         }
                     </select>
@@ -468,7 +470,11 @@
                                 {
                                     <tr>
                                         <td>@ticket.Titulo</td>
-                                        <td class="truncate">@ticket.Descripcion</td>
+                                        <td title="@ticket.Descripcion">
+                                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                @ticket.Descripcion
+                                            </div>
+                                        </td>
                                         <td>
                                             @{
                                                 string badgeClass = "badge-proceso";
@@ -477,40 +483,30 @@
                                                 
                                                 if (ticket.Estado != null)
                                                 {
-                                                    string estadoStr = ticket.Estado.ToString();
-                                                    
-                                                    // Si es un objeto completo, verificar si contiene "Gestper.Models"
-                                                    if (estadoStr.Contains("Gestper.Models"))
+                                                    estadoTexto = ticket.Estado.NombreEstado;
+
+                                                    switch (estadoTexto)
                                                     {
-                                                        estadoTexto = "En Proceso";
-                                                    }
-                                                    else
-                                                    {
-                                                        estadoTexto = estadoStr;
-                                                        
-                                                        switch (estadoTexto)
-                                                        {
-                                                            case "Abierto":
-                                                                badgeClass = "badge-abierto";
-                                                                iconClass = "bi-envelope-open";
-                                                                break;
-                                                            case "En Proceso":
-                                                                badgeClass = "badge-proceso";
-                                                                iconClass = "bi-hourglass-split";
-                                                                break;
-                                                            case "Resuelto":
-                                                                badgeClass = "badge-resuelto";
-                                                                iconClass = "bi-check-circle";
-                                                                break;
-                                                            case "Cerrado":
-                                                                badgeClass = "badge-cerrado";
-                                                                iconClass = "bi-x-circle";
-                                                                break;
-                                                            default:
-                                                                badgeClass = "badge-proceso";
-                                                                iconClass = "bi-hourglass-split";
-                                                                break;
-                                                        }
+                                                        case "Abierto":
+                                                            badgeClass = "badge-abierto";
+                                                            iconClass = "bi-envelope-open";
+                                                            break;
+                                                        case "En Proceso":
+                                                            badgeClass = "badge-proceso";
+                                                            iconClass = "bi-hourglass-split";
+                                                            break;
+                                                        case "Resuelto":
+                                                            badgeClass = "badge-resuelto";
+                                                            iconClass = "bi-check-circle";
+                                                            break;
+                                                        case "Cerrado":
+                                                            badgeClass = "badge-cerrado";
+                                                            iconClass = "bi-x-circle";
+                                                            break;
+                                                        default:
+                                                            badgeClass = "badge-proceso";
+                                                            iconClass = "bi-hourglass-split";
+                                                            break;
                                                     }
                                                 }
                                             }
@@ -526,9 +522,18 @@
                                                 <a href="/Ticket/Details/@ticket.IdTicket" class="btn btn-info btn-icon">
                                                     <i class="bi bi-eye"></i> Ver
                                                 </a>
-                                                <a href="/Ticket/Edit/@ticket.IdTicket" class="btn btn-warning btn-icon">
-                                                    <i class="bi bi-pencil"></i> Editar
-                                                </a>
+                                                @if (ticket.Estado?.NombreEstado != "Cerrado")
+                                                {
+                                                    <a href="/Ticket/Edit/@ticket.IdTicket" class="btn btn-warning btn-icon">
+                                                        <i class="bi bi-pencil"></i> Editar
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-secondary btn-icon" disabled>
+                                                        <i class="bi bi-lock"></i> Cerrado
+                                                    </button>
+                                                }
                                                 <form asp-action="Delete" asp-controller="Ticket" asp-route-id="@ticket.IdTicket" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este ticket?');">
                                                     <button type="submit" class="btn btn-danger btn-icon">
                                                         <i class="bi bi-trash"></i> Eliminar

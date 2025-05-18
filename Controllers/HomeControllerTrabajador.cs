@@ -15,7 +15,8 @@ namespace Gestper.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? idDepartamento, int? idEstado, int? idPrioridad, int? idBusqueda)
+        // AGREGADO: Se añade el parámetro "fechaBusqueda"
+        public async Task<IActionResult> Index(int? idDepartamento, int? idEstado, int? idPrioridad, int? idBusqueda, DateTime? fechaBusqueda)
         {
             if (HttpContext.Session.GetString("UsuarioRol") != "2")
                 return RedirectToAction("Login", "Usuario");
@@ -40,6 +41,10 @@ namespace Gestper.Controllers
             if (idBusqueda.HasValue)
                 ticketsQuery = ticketsQuery.Where(t => t.IdTicket == idBusqueda);
 
+            // AGREGADO: filtro por fecha exacta
+            if (fechaBusqueda.HasValue)
+                ticketsQuery = ticketsQuery.Where(t => t.FechaCreacion.Date == fechaBusqueda.Value.Date);
+
             var tickets = await ticketsQuery.OrderByDescending(t => t.FechaCreacion).ToListAsync();
 
             ViewBag.Total = tickets.Count;
@@ -50,15 +55,14 @@ namespace Gestper.Controllers
             ViewBag.Departamentos = await _context.Departamentos.ToListAsync();
             ViewBag.Estados = await _context.Estados.ToListAsync();
             ViewBag.Prioridades = await _context.Prioridades.ToListAsync();
-            
+
             var usuario = await _context.Usuarios
                 .Include(u => u.Departamento)
                 .FirstOrDefaultAsync(u => u.IdUsuario == idUsuario);
 
             ViewBag.DepartamentoNombre = usuario?.Departamento?.Nombre ?? "Sin departamento";
-            
-            return View("~/Views/Home/Index_Trabajador.cshtml", tickets);
 
+            return View("~/Views/Home/Index_Trabajador.cshtml", tickets);
         }
 
         public async Task<IActionResult> Detalle(int id)
@@ -72,7 +76,7 @@ namespace Gestper.Controllers
 
             if (ticket == null)
                 return NotFound();
-            
+
             var trabajadores = await _context.Usuarios
                 .Where(u => u.IdRol == 2)
                 .ToListAsync();
@@ -93,7 +97,7 @@ namespace Gestper.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Guardar(Ticket ticket)
         {
@@ -114,7 +118,7 @@ namespace Gestper.Controllers
 
             return RedirectToAction("Index");
         }
-        
+
         [HttpPost]
         public IActionResult CerrarSesion()
         {

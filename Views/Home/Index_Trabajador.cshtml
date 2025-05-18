@@ -26,14 +26,13 @@
             height: 100vh;
         }
 
-        /* Estilo para el contador de tickets */
         .ticket-counter {
             display: flex;
             justify-content: space-around;
             background-color: #f0f8ff;
             padding: 15px 0;
             border-bottom: 1px solid #ccc;
-            position: relative; /* Para posicionar el botón de cerrar sesión */
+            position: relative;
         }
 
         .counter-item {
@@ -51,7 +50,6 @@
             font-weight: bold;
         }
 
-        /* Estilo para el botón de cerrar sesión */
         .logout-button {
             position: absolute;
             top: 15px;
@@ -70,7 +68,6 @@
             background-color: #cc0000;
         }
 
-        /* Estilo para la barra lateral */
         .sidebar {
             width: 250px;
             background-color: #0078ff;
@@ -84,8 +81,8 @@
         .sidebar-logo {
             padding: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             margin-bottom: 20px;
         }
 
@@ -94,20 +91,6 @@
             height: auto;
         }
 
-        .sidebar-item {
-            padding: 15px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Estilos para los filtros en la barra lateral */
         .sidebar-filters {
             padding: 15px;
             margin-top: 20px;
@@ -122,14 +105,11 @@
             border: none;
             font-size: 14px;
             background-color: white;
-            -webkit-appearance: none;
-            -moz-appearance: none;
             appearance: none;
-            box-sizing: border-box; /* Añadir esta línea para asegurar que el padding no afecte el ancho total */
-            height: 36px; /* Establecer una altura fija para todos los elementos */
+            box-sizing: border-box;
+            height: 36px;
         }
 
-        /* Estilo específico para los selects */
         .sidebar-filters select {
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -149,7 +129,6 @@
             text-decoration: underline;
         }
 
-        /* Estilo para el botón de búsqueda */
         .search-button {
             width: 100%;
             padding: 8px;
@@ -218,19 +197,20 @@
 </head>
 <body>
     <div class="page-container">
-        
+
         <div class="sidebar">
-            <div class="sidebar-logo" style="display: flex; flex-direction: column; align-items: center;">
-                <img src="/images/logo.png" alt="Gestper Logo" style="width: 120px; height: auto;">
+            <div class="sidebar-logo">
+                <img src="/images/logo.png" alt="Gestper Logo">
                 <div style="margin-top: 10px; font-size: 14px; font-weight: bold; color: white;">
                     Departamento: @ViewBag.DepartamentoNombre
                 </div>
             </div>
-            
-            <!-- Filtros en la barra lateral -->
+
             <form method="get" asp-controller="Trabajador" asp-action="Index" class="sidebar-filters">
                 <input type="text" name="idBusqueda" placeholder="Ingrese una ID a buscar" value="@Context.Request.Query["idBusqueda"]" />
-                
+
+                <input type="date" name="fechaBusqueda" value="@Context.Request.Query["fechaBusqueda"]" />
+
                 <select name="idEstado">
                     <option value="">Seleccione estado</option>
                     @foreach (var estado in ViewBag.Estados)
@@ -240,7 +220,7 @@
                         </option>
                     }
                 </select>
-                
+
                 <select name="idPrioridad">
                     <option value="">Seleccione prioridad</option>
                     @foreach (var prioridad in ViewBag.Prioridades)
@@ -250,15 +230,13 @@
                         </option>
                     }
                 </select>
-                
-                
+
                 <button type="submit" class="search-button">Buscar</button>
                 <a href="@Url.Action("Index", ViewContext.RouteData.Values["controller"].ToString())">Limpiar filtros</a>
             </form>
         </div>
 
         <div class="main-container">
-            <!-- Contador de tickets ahora con el mismo color de fondo que la página -->
             <div class="ticket-counter">
                 <div class="counter-item">
                     <div class="counter-number">@ViewBag.Total</div>
@@ -276,8 +254,6 @@
                     <div class="counter-number">@ViewBag.Cerrados</div>
                     <div class="counter-label">CERRADOS</div>
                 </div>
-                
-                <!-- Botón de cerrar sesión ahora en la esquina superior derecha -->
                 <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
                     <button type="submit" class="logout-button">Cerrar sesión</button>
                 </form>
