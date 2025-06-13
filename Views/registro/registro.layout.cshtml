@@ -16,38 +16,39 @@
                 </div>
                 <div class="card-body px-4 py-4">
                     <form asp-action="Registrar" asp-controller="Usuario" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="mb-3">
                             <label asp-for="Nombre" class="form-label fw-semibold">Nombre</label>
-                            <input asp-for="Nombre" class="form-control" />
+                            <input asp-for="Nombre" class="form-control"/>
                             <span asp-validation-for="Nombre" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Apellido" class="form-label fw-semibold">Apellido</label>
-                            <input asp-for="Apellido" class="form-control" />
+                            <input asp-for="Apellido" class="form-control"/>
                             <span asp-validation-for="Apellido" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Correo" class="form-label fw-semibold">Correo</label>
-                            <input asp-for="Correo" class="form-control" type="email" />
+                            <input asp-for="Correo" class="form-control" type="email"/>
                             <span asp-validation-for="Correo" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Contrasena" class="form-label fw-semibold">Contraseña</label>
-                            <input asp-for="Contrasena" class="form-control" type="password" />
+                            <input asp-for="Contrasena" class="form-control" type="password"/>
                             <span asp-validation-for="Contrasena" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Telefono" class="form-label fw-semibold">Teléfono</label>
-                            <input asp-for="Telefono" class="form-control" />
+                            <input asp-for="Telefono" class="form-control"/>
                             <span asp-validation-for="Telefono" class="text-danger"></span>
                         </div>
 
                         <div class="form-check mb-4">
-                            <input asp-for="Activo" class="form-check-input" />
+                            <input asp-for="Activo" class="form-check-input"/>
                             <label asp-for="Activo" class="form-check-label">Activo</label>
                         </div>
 
